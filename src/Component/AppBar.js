@@ -12,12 +12,26 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { app } from '../firebase';
+import { useHistory } from 'react-router-dom';
 
 function AppBarWidget() {
   const pages = ['Market Place', 'Funding Activity'];
   const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const firebaseAuth = getAuth(app);
+  const history = useHistory();
+  
+  onAuthStateChanged(firebaseAuth, (user) => {
+    if (user) {
+      const uid = user.uid;
+      console.log(uid);
+    } else {
+      history.push('/login');
+    }
+  });
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -146,11 +160,20 @@ function AppBarWidget() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem key='Profile' onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">Profile</Typography>
+              </MenuItem>
+              <MenuItem key='Account' onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">Account</Typography>
+              </MenuItem>
+              <MenuItem key='Dashboard' onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">Dashboard</Typography>
+              </MenuItem>
+              <MenuItem key='Logout' onClick={()=>{
+                signOut(firebaseAuth);
+              }}>
+                  <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

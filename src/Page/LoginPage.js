@@ -14,6 +14,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './styles/LoginPage.css';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from '../firebase';
+import { useHistory } from 'react-router-dom';
 
 function LoginPage() {
     const theme = createTheme({
@@ -28,7 +29,7 @@ function LoginPage() {
     });
     
     const auth = getAuth(app);
-  
+    let history = useHistory();
   
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -40,6 +41,7 @@ function LoginPage() {
             // Signed in 
             const user = userCredential.user;
             console.log(user);
+            history.push('/');
           })
           .catch((error) => {
             const errorCode = error.code;

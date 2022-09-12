@@ -10,6 +10,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { app } from '../firebase';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { useHistory } from 'react-router-dom';
 
 export default function SignupPage() {
     const theme = createTheme({
@@ -23,6 +24,8 @@ export default function SignupPage() {
           },
     });
   const auth = getAuth(app);
+  let history = useHistory();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -32,6 +35,7 @@ export default function SignupPage() {
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(user);
+        history.push('/');
       })
       .catch((error) => {
         const errorCode = error.code;
