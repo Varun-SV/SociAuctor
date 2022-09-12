@@ -15,19 +15,32 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { app } from '../firebase';
 import { useHistory } from 'react-router-dom';
+import {addDoc, collection, getDocs,doc, updateDoc } from "@firebase/firestore";
+import {getFirestore } from "@firebase/firestore";
 
 function AppBarWidget() {
   const pages = ['Market Place', 'Funding Activity'];
   const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+  const [fullname, setFullname] = React.useState("");
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const firebaseAuth = getAuth(app);
   const history = useHistory();
+  var ref = null;
+  var firestore  = null;
   
-  onAuthStateChanged(firebaseAuth, (user) => {
+  onAuthStateChanged(firebaseAuth, async(user) => {
     if (user) {
       const uid = user.uid;
-      console.log(uid);
+      firestore = getFirestore(app);
+      ref = collection(firestore, 'users/');
+      const querySnapshot = await getDocs(ref);
+      querySnapshot.docs.forEach((doc)=>{
+        const dt = doc.data();
+        if(dt.userId === uid){
+          setFullname(dt.firstName + ' ' + dt.lastName);
+        }
+      });
     } else {
       history.push('/login');
     }
@@ -52,7 +65,6 @@ function AppBarWidget() {
     <AppBar position="static" style={{backgroundColor:"#1F3F49"}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -107,7 +119,6 @@ function AppBarWidget() {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -122,6 +133,7 @@ function AppBarWidget() {
               letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
+              fontSize: '110%'
             }}
           >
             SOCIAUCTOR
@@ -141,7 +153,10 @@ function AppBarWidget() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <AccountCircle style={{fontSize:40,color:"white"}}/>
+                <div style={{display:'flex', textAlign: 'center'}}>
+                  <AccountCircle style={{fontSize:40,color:"white"}}/>
+                  <Typography style={{color: 'white', fontWeight: 'bold', marginLeft: '10px', marginTop: '10px', fontSize:'60%'}}>{fullname}</Typography>
+                </div>
               </IconButton>
             </Tooltip>
             <Menu

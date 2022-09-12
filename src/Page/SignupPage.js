@@ -62,13 +62,14 @@ export default function SignupPage() {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log(user);
+        const uid = user.uid;
         setMessage("Signup successful");
         setmessageOpen(true);
         addDoc(ref, {
             firstName: firstName,
             lastName: lastName, 
-            email: email
+            email: email,
+            userId: uid
         }).then(()=>{
             history.push('/');
         })
