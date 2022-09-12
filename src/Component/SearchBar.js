@@ -6,6 +6,8 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Checkbox from '@mui/material/Checkbox';
 
 const Search = styled('div')(({ theme,width }) => ({
     position: 'relative',
@@ -47,24 +49,25 @@ const Search = styled('div')(({ theme,width }) => ({
 
 const SearchBarWidget = ()=>{
 
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
-    const [filterOptions,setFilterOptions] = ['abc','def'];
-    const [SortOptions,setSortOptions] = ['cba','fed'];
+    const [btn1, setBtn1] = React.useState(null);
+    const [btn2, setBtn2] = React.useState(null);
+    const filterOptions = ['abc','def'];
+    const SortOptions = ['cba','fed'];
 
     const handleOpenFilter = (event) => {
-        setAnchorElUser(event.currentTarget);
+        setBtn1(event.currentTarget);
     };
 
     const handleOpenSort = (event) => {
-        setAnchorElUser(event.currentTarget);
+        setBtn2(event.currentTarget);
     };
 
     const handleCloseFilter = () => {
-        setAnchorElUser(null);
+        setBtn1(null);
     };
 
     const handleCloseSort = () => {
-        setAnchorElUser(null);
+        setBtn2(null);
     };
 
     return(
@@ -82,10 +85,54 @@ const SearchBarWidget = ()=>{
                     </Search>
                 </Grid>
                 <Grid item display={"inherit"}>
-                    <button style={{borderRadius:5,width:100}}>Filter</button>
+                    <button style={{borderRadius:5,width:100}}  onClick={handleOpenFilter}>Filter</button>
+                    <Menu
+                    sx={{ mt: '45px' }}
+                    id="menu-appbar"
+                    anchorEl={btn1}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    open={Boolean(btn1)}
+                    onClose={handleCloseFilter}
+                    >
+                        {filterOptions.map((page) => (
+                            <MenuItem key={page} onClick={handleCloseFilter}>
+                            <Typography textAlign="center">{page}</Typography>
+                            </MenuItem>
+                        ))}
+                    </Menu>
                 </Grid>
                 <Grid item display={"inherit"}>
-                    <button style={{borderRadius:5,width:100}}>Sort</button>
+                    <button style={{borderRadius:5,width:100}}  onClick={handleOpenSort}>Sort</button>
+                    <Menu
+                    sx={{ mt: '45px' }}
+                    id="menu-appbar"
+                    anchorEl={btn2}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    open={Boolean(btn2)}
+                    onClose={handleCloseSort}
+                    >
+                        {SortOptions.map((page) => (
+                            <MenuItem key={page} onClick={handleCloseSort}>
+                            <Typography textAlign="center">{page}</Typography>
+                            </MenuItem>
+                        ))}
+                    </Menu>
                 </Grid>
             </Grid>
             </Box>
@@ -103,6 +150,28 @@ const SearchBarWidget = ()=>{
                 </Grid>
                 <Grid item display={"inherit"}>
                     <button style={{borderRadius:5}} onClick={handleOpenFilter}>Filter</button>
+                    <Menu
+                    sx={{ mt: '45px' }}
+                    id="menu-appbar"
+                    anchorEl={btn1}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    open={Boolean(btn1)}
+                    onClose={handleCloseFilter}
+                    >
+                        {filterOptions.map((page) => (
+                            <MenuItem key={page} onClick={handleCloseFilter}>
+                            <Typography textAlign="center">{page}</Typography>
+                            </MenuItem>
+                        ))}
+                    </Menu>
                 </Grid>
                 <Grid item display={"inherit"}>
                     <button style={{borderRadius:5}} onClick={handleOpenSort}>Sort</button>
