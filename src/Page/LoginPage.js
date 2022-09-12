@@ -8,26 +8,47 @@ import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import bg from '../assets/bg1.jpg';
 import './styles/LoginPage.css';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { app } from '../firebase';
 
 function LoginPage() {
-    const theme = createTheme();
+    const theme = createTheme({
+        palette: {
+            primary: {
+              light: 'white',
+              main: '#1F3F49',
+              dark: '#1F3F49',
+              contrastText: 'white',
+            }
+          },
+    });
+    
+    const auth = getAuth(app);
+  
+  
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-          email: data.get('email'),
-          password: data.get('password'),
-        });
+        const email = data.get('email');
+        const password = data.get('password');
+        signInWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
+            console.log(user);
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+          });
       };
     
       return (
-        <div>
+        <ThemeProvider theme={theme}>
           <Container component="main" maxWidth="xs">
             <CssBaseline />
             <Box
@@ -88,7 +109,7 @@ function LoginPage() {
               </Box>
             </Box>
           </Container>
-        </div>
+        </ThemeProvider>
       );
 }
 export default LoginPage;

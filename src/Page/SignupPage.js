@@ -8,17 +8,35 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-const theme = createTheme();
+import { app } from '../firebase';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 export default function SignupPage() {
+    const theme = createTheme({
+        palette: {
+            primary: {
+              light: 'white',
+              main: '#1F3F49',
+              dark: '#1F3F49',
+              contrastText: 'white',
+            }
+          },
+    });
+  const auth = getAuth(app);
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const email = data.get('email');
+    const password = data.get('password');
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
   };
 
   return (
