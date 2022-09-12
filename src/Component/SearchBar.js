@@ -71,7 +71,7 @@ const SearchBarWidget = ()=>{
     };
 
     return(
-        <Box maxWidth="xl" sx={{ flexGrow: 1 }} style={{backgroundColor:"#142e36"}}>
+        <Box maxWidth="xxl" sx={{ flexGrow: 1 }} style={{backgroundColor:"#142e36"}}>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} style={{padding:(5,13)}}>
             <Grid container spacing = {2} style={{height:"max-content",justifyContent:'strech'}} >
                 <Grid item>
