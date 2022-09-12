@@ -6,14 +6,16 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import LoginPage from './Page/LoginPage';
 import SalesDashboard from './Page/SalesDashboard';
 import SignupPage from './Page/SignupPage';
+import FundingDashboard from './Page/FundingDashboard';
 
 export default function App() {
   return (
     <Router>
       <Switch>
         <Route exact path="/" component={SalesDashboard} />
-        <Route path="/login" component={LoginPage} />
-        <Route path="/signup" component={SignupPage} />
+        <Route exact path="/login" component={LoginPage} />
+        <Route exact path="/signup" component={SignupPage} />
+        <Route exact path="/funding" component={FundingDashboard} />
       </Switch>
     </Router>
   );

@@ -19,8 +19,6 @@ import {addDoc, collection, getDocs,doc, updateDoc } from "@firebase/firestore";
 import {getFirestore } from "@firebase/firestore";
 
 function AppBarWidget() {
-  const pages = ['Market Place', 'Funding Activity'];
-  const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
   const [fullname, setFullname] = React.useState("");
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -112,11 +110,13 @@ function AppBarWidget() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem key='Marketplace' onClick={()=>history.push('/')}>
+                <Typography textAlign="center">Marketplace</Typography>
+              </MenuItem>
+              <MenuItem key='FundingActivity' onClick={()=>history.push('/funding')}>
+                <Typography textAlign="center">Funding Activity</Typography>
+              </MenuItem>
+              
             </Menu>
           </Box>
           <Typography
@@ -139,15 +139,20 @@ function AppBarWidget() {
             SOCIAUCTOR
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
+                key='Marketplace'
+                onClick={()=>history.push('/')}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                Marketplace
               </Button>
-            ))}
+              <Button
+                key='FundingActivity'
+                onClick={()=>history.push('/funding')}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                Funding Activity
+              </Button>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
