@@ -10,7 +10,6 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { app } from '../firebase';
@@ -185,9 +184,6 @@ function AppBarWidget() {
               </MenuItem>
               <MenuItem key='Account' onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">Account</Typography>
-              </MenuItem>
-              <MenuItem key='Dashboard' onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">Dashboard</Typography>
               </MenuItem>
               <MenuItem key='Logout' onClick={()=>{
                 signOut(firebaseAuth);
