@@ -15,8 +15,12 @@ import './styles/LoginPage.css';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from '../firebase';
 import { useHistory } from 'react-router-dom';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 function LoginPage() {
+    const [messageOpen, setmessageOpen] = React.useState(false);
+    const [message, setMessage] = React.useState("");
     const theme = createTheme({
         palette: {
             primary: {
@@ -28,6 +32,18 @@ function LoginPage() {
           },
     });
     
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setmessageOpen(false);
+      };
+    
+    const Alert = React.forwardRef(function Alert(props, ref) {
+        return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+      });
+    
     const auth = getAuth(app);
     let history = useHistory();
   
@@ -38,7 +54,9 @@ function LoginPage() {
         const password = data.get('password');
         signInWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
-            // Signed in 
+            // Signed in
+            setMessage("Authentication Successful");
+            setmessageOpen(true);
             const user = userCredential.user;
             console.log(user);
             history.push('/');
@@ -46,6 +64,8 @@ function LoginPage() {
           .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
+            setMessage(errorMessage);
+            setmessageOpen(true);
           });
       };
     
@@ -101,6 +121,11 @@ function LoginPage() {
                 >
                   Login
                 </Button>
+                <Snackbar open={messageOpen} autoHideDuration={6000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
+                      {message}
+                    </Alert>
+                </Snackbar>
                 <Grid container>
                   <Grid item>
                     <Link href="/signup" variant="body2">

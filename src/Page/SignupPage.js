@@ -13,8 +13,12 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useHistory } from 'react-router-dom';
 import {getFirestore } from "@firebase/firestore";
 import {addDoc, collection, getDocs,doc, updateDoc } from "@firebase/firestore";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 export default function SignupPage() {
+  const [messageOpen, setmessageOpen] = React.useState(false);
+  const [message, setMessage] = React.useState("");
     const theme = createTheme({
         palette: {
             primary: {
@@ -35,6 +39,18 @@ export default function SignupPage() {
     firestore = getFirestore(app);
     ref = collection(firestore,"users/");
   }
+  
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+  
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setmessageOpen(false);
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -47,6 +63,8 @@ export default function SignupPage() {
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(user);
+        setMessage("Signup successful");
+        setmessageOpen(true);
         addDoc(ref, {
             firstName: firstName,
             lastName: lastName, 
@@ -58,6 +76,8 @@ export default function SignupPage() {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        setMessage(errorMessage);
+        setmessageOpen(true);
       });
   };
 
@@ -133,6 +153,11 @@ export default function SignupPage() {
             >
               Sign Up
             </Button>
+            <Snackbar open={messageOpen} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
+                  {message}
+                </Alert>
+            </Snackbar>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/login" variant="body2">
