@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const Search = styled('div')(({ theme,width }) => ({
     position: 'relative',
@@ -85,7 +86,7 @@ const SearchBarWidget = ()=>{
                     </Search>
                 </Grid>
                 <Grid item display={"inherit"}>
-                    <button style={{borderRadius:5,width:100}}  onClick={handleOpenFilter}>Filter</button>
+                    <button style={{borderRadius:5,width:100,border:"white"}}  onClick={handleOpenFilter}>Filter</button>
                     <Menu
                     sx={{ mt: '45px' }}
                     id="menu-appbar"
@@ -102,15 +103,25 @@ const SearchBarWidget = ()=>{
                     open={Boolean(btn1)}
                     onClose={handleCloseFilter}
                     >
-                        {filterOptions.map((page) => (
-                            <MenuItem key={page} onClick={handleCloseFilter}>
-                            <Typography textAlign="center">{page}</Typography>
-                            </MenuItem>
-                        ))}
+                        <MenuItem key="abc" onClick = {handleCloseFilter}>
+                            <Typography textAlign="center">
+                                <Checkbox />Abc
+                            </Typography>
+                        </MenuItem>
+                        <MenuItem key="abc1" onClick = {handleCloseFilter}>
+                            <Typography textAlign="center">
+                                <Checkbox />Abc1
+                            </Typography>
+                        </MenuItem>
+                        <MenuItem key="abc2" onClick = {handleCloseFilter}>
+                            <Typography textAlign="center">
+                                <Checkbox />Abc2
+                            </Typography>
+                        </MenuItem>
                     </Menu>
                 </Grid>
                 <Grid item display={"inherit"}>
-                    <button style={{borderRadius:5,width:100}}  onClick={handleOpenSort}>Sort</button>
+                    <button style={{borderRadius:5,width:100,border:"white"}}  onClick={handleOpenSort}>Sort</button>
                     <Menu
                     sx={{ mt: '45px' }}
                     id="menu-appbar"
@@ -127,11 +138,16 @@ const SearchBarWidget = ()=>{
                     open={Boolean(btn2)}
                     onClose={handleCloseSort}
                     >
-                        {SortOptions.map((page) => (
-                            <MenuItem key={page} onClick={handleCloseSort}>
-                            <Typography textAlign="center">{page}</Typography>
-                            </MenuItem>
-                        ))}
+                        <MenuItem key="def" onClick = {handleCloseSort}>
+                            <Typography textAlign="center">
+                                <Checkbox />DEF
+                            </Typography>
+                        </MenuItem>
+                        <MenuItem key="def1" onClick = {handleCloseSort}>
+                            <Typography textAlign="center">
+                                <Checkbox />DEF1
+                            </Typography>
+                        </MenuItem>
                     </Menu>
                 </Grid>
             </Grid>
@@ -149,7 +165,7 @@ const SearchBarWidget = ()=>{
                     </Search>
                 </Grid>
                 <Grid item display={"inherit"}>
-                    <button style={{borderRadius:5}} onClick={handleOpenFilter}>Filter</button>
+                    <button style={{borderRadius:5,border:"white"}} onClick={handleOpenFilter}>Filter</button>
                     <Menu
                     sx={{ mt: '45px' }}
                     id="menu-appbar"
@@ -166,15 +182,52 @@ const SearchBarWidget = ()=>{
                     open={Boolean(btn1)}
                     onClose={handleCloseFilter}
                     >
-                        {filterOptions.map((page) => (
-                            <MenuItem key={page} onClick={handleCloseFilter}>
-                            <Typography textAlign="center">{page}</Typography>
-                            </MenuItem>
-                        ))}
+                        <MenuItem key="abc" onClick = {handleCloseFilter}>
+                            <Typography textAlign="center">
+                                <Checkbox />Abc
+                            </Typography>
+                        </MenuItem>
+                        <MenuItem key="abc1" onClick = {handleCloseFilter}>
+                            <Typography textAlign="center">
+                                <Checkbox />Abc1
+                            </Typography>
+                        </MenuItem>
+                        <MenuItem key="abc2" onClick = {handleCloseFilter}>
+                            <Typography textAlign="center">
+                                <Checkbox />Abc2
+                            </Typography>
+                        </MenuItem>
                     </Menu>
                 </Grid>
                 <Grid item display={"inherit"}>
-                    <button style={{borderRadius:5}} onClick={handleOpenSort}>Sort</button>
+                <button style={{borderRadius:5,border:"white"}}  onClick={handleOpenSort}>Sort</button>
+                    <Menu
+                    sx={{ mt: '45px' }}
+                    id="menu-appbar"
+                    anchorEl={btn2}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    open={Boolean(btn2)}
+                    onClose={handleCloseSort}
+                    >
+                        <MenuItem key="def" onClick = {handleCloseSort}>
+                            <Typography textAlign="center">
+                                <Checkbox />DEF
+                            </Typography>
+                        </MenuItem>
+                        <MenuItem key="def1" onClick = {handleCloseSort}>
+                            <Typography textAlign="center">
+                                <Checkbox />DEF1
+                            </Typography>
+                        </MenuItem>
+                    </Menu>
                 </Grid>
             </Grid>
             </Box>
