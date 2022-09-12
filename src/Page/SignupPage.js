@@ -11,6 +11,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { app } from '../firebase';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useHistory } from 'react-router-dom';
+import {getFirestore } from "@firebase/firestore";
+import {addDoc, collection, getDocs,doc, updateDoc } from "@firebase/firestore";
 
 export default function SignupPage() {
     const theme = createTheme({
@@ -25,17 +27,33 @@ export default function SignupPage() {
     });
   const auth = getAuth(app);
   let history = useHistory();
+  
+  var firestore = null;
+  var ref = null;
+  
+  if(auth !== undefined){
+    firestore = getFirestore(app);
+    ref = collection(firestore,"users/");
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get('email');
     const password = data.get('password');
+    const firstName = data.get('firstName');
+    const lastName = data.get('lastName');
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(user);
-        history.push('/');
+        addDoc(ref, {
+            firstName: firstName,
+            lastName: lastName, 
+            email: email
+        }).then(()=>{
+            history.push('/');
+        })
       })
       .catch((error) => {
         const errorCode = error.code;
