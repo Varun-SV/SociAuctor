@@ -9,7 +9,12 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { Button } from '@mui/material';
+import { Button, FormControl } from '@mui/material';
+import Modal from '@mui/material/Modal';
+import { TextField, Select, InputLabel } from '@mui/material';
+import { FileUploader } from "react-drag-drop-files";
+import currencyJson from '../assets/Common-Currency.json';
+import DurationPicker from 'react-duration-picker';
 
 const Search = styled('div')(({ theme,width }) => ({
     position: 'relative',
@@ -47,7 +52,18 @@ const Search = styled('div')(({ theme,width }) => ({
         },
       },
     },
-  }));  
+  }));
+  
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    borderRadius: 2,
+    p: 4,
+  };
 
 const SearchBarWidget = (props)=>{
 
@@ -55,6 +71,24 @@ const SearchBarWidget = (props)=>{
     const [btn2, setBtn2] = React.useState(null);
     const filterOptions = ['abc','def'];
     const SortOptions = ['cba','fed'];
+    const [openSale, setOpenSale] = React.useState(false);
+    const [openAct, setOpenAct] = React.useState(false);
+    const fileTypes = ["JPG", "PNG", "JPEG"];
+    const [files, setFiles] = React.useState();
+    const saleCategories = ['Antiques', 'Handicraft', 'Paintings', 'Statues', 'Collectible'];
+    const [saleCategory, setSaleCategory] = React.useState("");
+    const [saleCurrency, setSaleCurrency] = React.useState("");
+    
+    const currencyList = Object.keys(currencyJson);
+    
+    const handleOpenSale = () => setOpenSale(true);
+    const handleOpenAct = () => setOpenAct(true);
+    const handleCloseSale = () => {
+        setOpenSale(false);
+    }
+    const handleCloseAct = () => {
+        setOpenAct(false);
+    }
 
     const handleOpenFilter = (event) => {
         setBtn1(event.currentTarget);
@@ -70,6 +104,23 @@ const SearchBarWidget = (props)=>{
 
     const handleCloseSort = () => {
         setBtn2(null);
+    };
+    
+    const handleFileChange = (file) => {
+        setFiles(file);
+        console.log(files);
+      };
+    
+    const handleSalesCategoryChange = (event) => {
+        setSaleCategory(event.target.value);
+    }
+    
+    const handleSalesCurrencyChange = (event) => {
+        setSaleCurrency(event.target.value);
+    }
+    
+    const handleDealSubmit = (event) => {
+        
     };
 
     return(
@@ -236,7 +287,78 @@ const SearchBarWidget = (props)=>{
             </div>
             <Button
               style={{background: 'white', color: '#142e36', marginBottom: '1%', marginTop: '1%'}}
+              onClick={handleOpenSale}
               >{props.additionTitle}</Button>
+            <Modal
+            open={openSale}
+            onClose={handleCloseSale}
+            >
+                <Box sx={style}>
+                  <h1 className="cardTitle">Add Deal</h1>
+                  <br/>
+                  <form onSubmit={handleDealSubmit}>
+                  <Typography>Upload the images of the item (atleast 3 images)</Typography><br/>
+                  <FileUploader handleChange={handleFileChange} name="file" types={fileTypes} multiple /><br/>
+                  <Grid>
+                    {
+                        files && [...files].map((file)=>{
+                            <img src={URL.createObjectURL(file)} width='5%' height='5%'/>
+                        })
+                    }
+                  </Grid>
+                  <TextField
+                    name = "saleItemName"
+                    placeholder="Item Name"
+                    style={{width: '100%'}}
+                  /><br/><br/>
+                  <FormControl style={{width: '100%'}}>
+                      <InputLabel id="deal-category-select-label">Select Category</InputLabel>
+                      <Select
+                        labelId='deal-category-select-label'
+                        label='Select Category'
+                        onChange={handleSalesCategoryChange}
+                        value={saleCategory}
+                      >
+                        {saleCategories.map((category)=>{
+                            return (<MenuItem value={category}>
+                                <Typography>{category}</Typography>
+                            </MenuItem>)
+                        })
+                        }
+                      </Select>
+                  </FormControl><br/><br/>
+                  <FormControl style={{width:'40%'}}>
+                      <InputLabel id="deal-currency-select-label">Select Currency</InputLabel>
+                      <Select
+                        labelId='deal-currency-select-label'
+                        label='Select Currency'
+                        onChange={handleSalesCurrencyChange}
+                        value={saleCurrency}
+                      >
+                        {currencyList.map((category)=>{
+                            return (<MenuItem value={category}>
+                                <Typography>{category}</Typography>
+                            </MenuItem>)
+                        })
+                        }
+                      </Select>
+                  </FormControl>
+                  <TextField 
+                    placeholder='Minimum bid amount' 
+                    name='minimumBidAmount'
+                    type={'number'}
+                    style={{width:'auto'}}/>
+                  <br/>
+                  <br/>
+                  <Typography>Select bid challenge duration</Typography><br/>
+                  <DurationPicker
+                    initialDuration={{ hours: 1, minutes: 2, seconds: 3 }}
+                    maxHours={5}
+                  /><br/><br/>
+                  <Button type="submit" style={{width: 400, background: '#142e36', color: 'white'}}>Add Deal</Button>
+                  </form>
+                </Box>
+          </Modal>
         </Box>
     );
 }
