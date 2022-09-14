@@ -8,10 +8,8 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { Button, FormControl } from '@mui/material';
+import { Button, FormControl, TextField, Select, InputLabel, Autocomplete } from '@mui/material';
 import Modal from '@mui/material/Modal';
-import { TextField, Select, InputLabel } from '@mui/material';
 import { FileUploader } from "react-drag-drop-files";
 import currencyJson from '../assets/Common-Currency.json';
 import DurationPicker from 'react-duration-picker';
@@ -63,6 +61,9 @@ const Search = styled('div')(({ theme,width }) => ({
     boxShadow: 24,
     borderRadius: 2,
     p: 4,
+    width: '30%',
+    height: '120%',
+    overflowY: 'scroll'
   };
 
 const SearchBarWidget = (props)=>{
@@ -77,9 +78,8 @@ const SearchBarWidget = (props)=>{
     const [files, setFiles] = React.useState([]);
     const saleCategories = ['Antiques', 'Handicraft', 'Paintings', 'Statues', 'Collectible'];
     const [saleCategory, setSaleCategory] = React.useState("");
-    const [saleCurrency, setSaleCurrency] = React.useState("");
-    
     const currencyList = Object.keys(currencyJson);
+    const [saleCurrency, setSaleCurrency] = React.useState(currencyList[0]);
     
     const handleOpenSale = () => setOpenSale(true);
     const handleOpenAct = () => setOpenAct(true);
@@ -107,12 +107,9 @@ const SearchBarWidget = (props)=>{
     };
     
     const handleFileChange = (file) => {
-        console.log(file);
-        console.log([...file]);
         [...file].map((file_)=>{
             let reader = new FileReader();
             reader.onload = (e) => {
-                console.log(e.target.result);
                 setFiles(prevState => ([...prevState,e.target.result]));
             };
             reader.readAsDataURL(file_);
@@ -300,6 +297,7 @@ const SearchBarWidget = (props)=>{
             <Modal
             open={openSale}
             onClose={handleCloseSale}
+            style={{ marginTop: '8%', marginBottom: '20%', height: '65%', width: '100%'}}
             >
                 <Box sx={style}>
                   <h1 className="cardTitle">Add Deal</h1>
@@ -307,17 +305,22 @@ const SearchBarWidget = (props)=>{
                   <form onSubmit={handleDealSubmit}>
                   <Typography>Upload the images of the item (atleast 3 images)</Typography><br/>
                   <FileUploader handleChange={handleFileChange} name="file" types={fileTypes} multiple /><br/>
-                  <Grid>
+                  <Grid style={{width: '100%', display: 'flex', overflow: 'scroll', marginBottom: '2%'}}>
                     {
                         files.map((file)=>{
-                            return (<img src={file} width='50px' height='50px'/>)
+                            return (<img src={file} width='30%' height='30%'/>)
                         })
                     }
                   </Grid>
+                  <a href={"#"}
+                    onClick={()=>{setFiles([])}}
+                    style={{marginBottom: '5px'}}>
+                    Clear
+                  </a><br/>
                   <TextField
                     name = "saleItemName"
                     placeholder="Item Name"
-                    style={{width: '100%'}}
+                    style={{width: '100%', marginTop: '3%'}}
                   /><br/><br/>
                   <FormControl style={{width: '100%'}}>
                       <InputLabel id="deal-category-select-label">Select Category</InputLabel>
@@ -363,7 +366,14 @@ const SearchBarWidget = (props)=>{
                     initialDuration={{ hours: 1, minutes: 2, seconds: 3 }}
                     maxHours={5}
                   /><br/><br/>
-                  <Button type="submit" style={{width: 400, background: '#142e36', color: 'white'}}>Add Deal</Button>
+                  <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      options={['Heart Operation', 'Kidney Surgery']}
+                      sx={{ width: '100%', marginTop: '1%' }}
+                      renderInput={(params) => <TextField {...params} label="Funding Activity" />}
+                  /><br/><br/>
+                  <Button type="submit" style={{width: '100%', background: '#142e36', color: 'white', fontSize: '100%'}}>Add Deal</Button>
                   </form>
                 </Box>
           </Modal>
