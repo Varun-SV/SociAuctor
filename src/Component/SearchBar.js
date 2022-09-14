@@ -300,8 +300,9 @@ const SearchBarWidget = (props)=>{
             style={{ marginTop: '8%', marginBottom: '20%', height: '65%', width: '100%'}}
             >
                 <Box sx={style}>
-                  <h1 className="cardTitle">Add Deal</h1>
+                  <h1 className="cardTitle">{props.additionTitle}</h1>
                   <br/>
+                  { props.additionTitle==="Add Deal"?
                   <form onSubmit={handleDealSubmit}>
                   <Typography>Upload the images of the item (atleast 3 images)</Typography><br/>
                   <FileUploader handleChange={handleFileChange} name="file" types={fileTypes} multiple /><br/>
@@ -366,6 +367,14 @@ const SearchBarWidget = (props)=>{
                     initialDuration={{ hours: 1, minutes: 2, seconds: 3 }}
                     maxHours={5}
                   /><br/><br/>
+                  <Typography>Select bid challenge deadline</Typography><br/>
+                  <TextField  
+                    name='BiddingDeadline'
+                    type='datetime-local'
+                    onChange={(e)=>{console.log(new Date(e.target.value).toUTCString());}}
+                    style={{width:'100%'}}/>
+                  <br/>
+                  <br/>
                   <Autocomplete
                       disablePortal
                       id="combo-box-demo"
@@ -373,8 +382,73 @@ const SearchBarWidget = (props)=>{
                       sx={{ width: '100%', marginTop: '1%' }}
                       renderInput={(params) => <TextField {...params} label="Funding Activity" />}
                   /><br/><br/>
-                  <Button type="submit" style={{width: '100%', background: '#142e36', color: 'white', fontSize: '100%'}}>Add Deal</Button>
+                  <Button type="submit" style={{width: '100%', background: '#142e36', color: 'white', fontSize: '100%'}}>{props.additionTitle}</Button>
                   </form>
+                  :
+                  <form onSubmit={handleDealSubmit}>
+                  <TextField
+                    name = "saleItemName"
+                    placeholder="Title"
+                    style={{width: '100%'}}
+                  /><br/><br/>
+                  <FormControl style={{width: '100%'}}>
+                      <InputLabel id="deal-category-select-label">Select Category</InputLabel>
+                      <Select
+                        labelId='deal-category-select-label'
+                        label='Select Category'
+                        onChange={handleSalesCategoryChange}
+                        value={saleCategory}
+                      >
+                        {saleCategories.map((category)=>{
+                            return (<MenuItem value={category} key={category}>
+                                <Typography>{category}</Typography>
+                            </MenuItem>)
+                        })
+                        }
+                      </Select>
+                  </FormControl><br/><br/>
+                  <FormControl style={{width:'40%'}}>
+                      <InputLabel id="deal-currency-select-label">Select Currency</InputLabel>
+                      <Select
+                        labelId='deal-currency-select-label'
+                        label='Select Currency'
+                        onChange={handleSalesCurrencyChange}
+                        value={saleCurrency}
+                      >
+                        {currencyList.map((category)=>{
+                            return (<MenuItem value={category} key={category}>
+                                <Typography>{category}</Typography>
+                            </MenuItem>)
+                        })
+                        }
+                      </Select>
+                  </FormControl>
+                  <TextField 
+                    placeholder='Minimum bid amount' 
+                    name='minimumBidAmount'
+                    type={'number'}
+                    style={{width:'auto'}}/>
+                  <br/>
+                  <br/>
+                  <Typography>Upload the proof</Typography><br/>
+                  <FileUploader handleChange={handleFileChange} name="file" types={fileTypes} multiple /><br/>
+                  <Grid>
+                    {
+                        files.map((file)=>{
+                            return (<img src={file} width='50px' height='50px'/>)
+                        })
+                    }
+                  </Grid>
+                  <TextField  
+                    name='EventDateTime'
+                    type='datetime-local'
+                    onChange={(e)=>{console.log(new Date(e.target.value).toUTCString());}}
+                    style={{width:'100%'}}/>
+                  <br/>
+                  <br/>
+                  <Button type="submit" style={{width: "100%", background: '#142e36', color: 'white'}}>{props.additionTitle}</Button>
+                  </form>
+                }
                 </Box>
           </Modal>
         </Box>
