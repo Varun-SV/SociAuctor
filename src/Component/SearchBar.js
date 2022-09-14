@@ -9,6 +9,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { Button } from '@mui/material';
 
 const Search = styled('div')(({ theme,width }) => ({
     position: 'relative',
@@ -48,7 +49,7 @@ const Search = styled('div')(({ theme,width }) => ({
     },
   }));  
 
-const SearchBarWidget = ()=>{
+const SearchBarWidget = (props)=>{
 
     const [btn1, setBtn1] = React.useState(null);
     const [btn2, setBtn2] = React.useState(null);
@@ -72,165 +73,170 @@ const SearchBarWidget = ()=>{
     };
 
     return(
-        <Box maxWidth="xxl" sx={{ flexGrow: 1 }} style={{backgroundColor:"#142e36"}}>
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} style={{padding:(5,13)}}>
-            <Grid container spacing = {2} style={{height:"max-content",justifyContent:'strech'}} >
-                <Grid item>
-                    <Search width="100%">
-                        <SearchIconWrapper>
-                            <SearchIcon style={{color:"white"}}/>
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search"
-                        />
-                    </Search>
-                </Grid>
-                <Grid item display={"inherit"}>
-                    <button style={{borderRadius:5,width:100,border:"white"}}  onClick={handleOpenFilter}>Filter</button>
-                    <Menu
-                    sx={{ mt: '45px' }}
-                    id="menu-appbar"
-                    anchorEl={btn1}
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    open={Boolean(btn1)}
-                    onClose={handleCloseFilter}
-                    >
-                        <MenuItem key="abc" onClick = {handleCloseFilter}>
-                            <Typography textAlign="center">
-                                <Checkbox />Abc
-                            </Typography>
-                        </MenuItem>
-                        <MenuItem key="abc1" onClick = {handleCloseFilter}>
-                            <Typography textAlign="center">
-                                <Checkbox />Abc1
-                            </Typography>
-                        </MenuItem>
-                        <MenuItem key="abc2" onClick = {handleCloseFilter}>
-                            <Typography textAlign="center">
-                                <Checkbox />Abc2
-                            </Typography>
-                        </MenuItem>
-                    </Menu>
-                </Grid>
-                <Grid item display={"inherit"}>
-                    <button style={{borderRadius:5,width:100,border:"white"}}  onClick={handleOpenSort}>Sort</button>
-                    <Menu
-                    sx={{ mt: '45px' }}
-                    id="menu-appbar"
-                    anchorEl={btn2}
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    open={Boolean(btn2)}
-                    onClose={handleCloseSort}
-                    >
-                        <MenuItem key="def" onClick = {handleCloseSort}>
-                            <Typography textAlign="center">
-                                <Checkbox />DEF
-                            </Typography>
-                        </MenuItem>
-                        <MenuItem key="def1" onClick = {handleCloseSort}>
-                            <Typography textAlign="center">
-                                <Checkbox />DEF1
-                            </Typography>
-                        </MenuItem>
-                    </Menu>
-                </Grid>
-            </Grid>
-            </Box>
-            <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} style={{padding:(3,7)}}>
-            <Grid container style={{height:"max-content",justifyContent:'space-around'}} >
-                <Grid item>
-                    <Search width="max-content">
-                        <SearchIconWrapper>
-                            <SearchIcon style={{color:"white"}}/>
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search"
-                        />
-                    </Search>
-                </Grid>
-                <Grid item display={"inherit"}>
-                    <button style={{borderRadius:5,border:"white"}} onClick={handleOpenFilter}>Filter</button>
-                    <Menu
-                    sx={{ mt: '45px' }}
-                    id="menu-appbar"
-                    anchorEl={btn1}
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    open={Boolean(btn1)}
-                    onClose={handleCloseFilter}
-                    >
-                        <MenuItem key="abc" onClick = {handleCloseFilter}>
-                            <Typography textAlign="center">
-                                <Checkbox />Abc
-                            </Typography>
-                        </MenuItem>
-                        <MenuItem key="abc1" onClick = {handleCloseFilter}>
-                            <Typography textAlign="center">
-                                <Checkbox />Abc1
-                            </Typography>
-                        </MenuItem>
-                        <MenuItem key="abc2" onClick = {handleCloseFilter}>
-                            <Typography textAlign="center">
-                                <Checkbox />Abc2
-                            </Typography>
-                        </MenuItem>
-                    </Menu>
-                </Grid>
-                <Grid item display={"inherit"}>
-                <button style={{borderRadius:5,border:"white"}}  onClick={handleOpenSort}>Sort</button>
-                    <Menu
-                    sx={{ mt: '45px' }}
-                    id="menu-appbar"
-                    anchorEl={btn2}
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    open={Boolean(btn2)}
-                    onClose={handleCloseSort}
-                    >
-                        <MenuItem key="def" onClick = {handleCloseSort}>
-                            <Typography textAlign="center">
-                                <Checkbox />DEF
-                            </Typography>
-                        </MenuItem>
-                        <MenuItem key="def1" onClick = {handleCloseSort}>
-                            <Typography textAlign="center">
-                                <Checkbox />DEF1
-                            </Typography>
-                        </MenuItem>
-                    </Menu>
-                </Grid>
-            </Grid>
-            </Box>
+        <Box maxWidth="xxl" sx={{ flexGrow: 1 }} style={{backgroundColor:"#142e36", display: 'flex', justifyContent: 'space-evenly'}}>
+            <div>
+                <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} style={{padding:(5,13)}}>
+                    <Grid container spacing = {2} style={{height:"max-content",justifyContent:'strech'}} >
+                        <Grid item>
+                            <Search width="100%">
+                                <SearchIconWrapper>
+                                    <SearchIcon style={{color:"white"}}/>
+                                </SearchIconWrapper>
+                                <StyledInputBase
+                                    placeholder="Search"
+                                />
+                            </Search>
+                        </Grid>
+                        <Grid item display={"inherit"}>
+                            <button style={{borderRadius:5,width:100,border:"white"}}  onClick={handleOpenFilter}>Filter</button>
+                            <Menu
+                            sx={{ mt: '45px' }}
+                            id="menu-appbar"
+                            anchorEl={btn1}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(btn1)}
+                            onClose={handleCloseFilter}
+                            >
+                                <MenuItem key="abc" onClick = {handleCloseFilter}>
+                                    <Typography textAlign="center">
+                                        <Checkbox />Abc
+                                    </Typography>
+                                </MenuItem>
+                                <MenuItem key="abc1" onClick = {handleCloseFilter}>
+                                    <Typography textAlign="center">
+                                        <Checkbox />Abc1
+                                    </Typography>
+                                </MenuItem>
+                                <MenuItem key="abc2" onClick = {handleCloseFilter}>
+                                    <Typography textAlign="center">
+                                        <Checkbox />Abc2
+                                    </Typography>
+                                </MenuItem>
+                            </Menu>
+                        </Grid>
+                        <Grid item display={"inherit"}>
+                            <button style={{borderRadius:5,width:100,border:"white"}}  onClick={handleOpenSort}>Sort</button>
+                            <Menu
+                            sx={{ mt: '45px' }}
+                            id="menu-appbar"
+                            anchorEl={btn2}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(btn2)}
+                            onClose={handleCloseSort}
+                            >
+                                <MenuItem key="def" onClick = {handleCloseSort}>
+                                    <Typography textAlign="center">
+                                        <Checkbox />DEF
+                                    </Typography>
+                                </MenuItem>
+                                <MenuItem key="def1" onClick = {handleCloseSort}>
+                                    <Typography textAlign="center">
+                                        <Checkbox />DEF1
+                                    </Typography>
+                                </MenuItem>
+                            </Menu>
+                        </Grid>
+                    </Grid>
+                </Box>
+                <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} style={{padding:(3,7)}}>
+                    <Grid container style={{height:"max-content",justifyContent:'space-around'}} >
+                        <Grid item>
+                            <Search width="max-content">
+                                <SearchIconWrapper>
+                                    <SearchIcon style={{color:"white"}}/>
+                                </SearchIconWrapper>
+                                <StyledInputBase
+                                    placeholder="Search"
+                                />
+                            </Search>
+                        </Grid>
+                        <Grid item display={"inherit"}>
+                            <button style={{borderRadius:5,border:"white"}} onClick={handleOpenFilter}>Filter</button>
+                            <Menu
+                            sx={{ mt: '45px' }}
+                            id="menu-appbar"
+                            anchorEl={btn1}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(btn1)}
+                            onClose={handleCloseFilter}
+                            >
+                                <MenuItem key="abc" onClick = {handleCloseFilter}>
+                                    <Typography textAlign="center">
+                                        <Checkbox />Abc
+                                    </Typography>
+                                </MenuItem>
+                                <MenuItem key="abc1" onClick = {handleCloseFilter}>
+                                    <Typography textAlign="center">
+                                        <Checkbox />Abc1
+                                    </Typography>
+                                </MenuItem>
+                                <MenuItem key="abc2" onClick = {handleCloseFilter}>
+                                    <Typography textAlign="center">
+                                        <Checkbox />Abc2
+                                    </Typography>
+                                </MenuItem>
+                            </Menu>
+                        </Grid>
+                        <Grid item display={"inherit"}>
+                        <button style={{borderRadius:5,border:"white"}}  onClick={handleOpenSort}>Sort</button>
+                            <Menu
+                            sx={{ mt: '45px' }}
+                            id="menu-appbar"
+                            anchorEl={btn2}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(btn2)}
+                            onClose={handleCloseSort}
+                            >
+                                <MenuItem key="def" onClick = {handleCloseSort}>
+                                    <Typography textAlign="center">
+                                        <Checkbox />DEF
+                                    </Typography>
+                                </MenuItem>
+                                <MenuItem key="def1" onClick = {handleCloseSort}>
+                                    <Typography textAlign="center">
+                                        <Checkbox />DEF1
+                                    </Typography>
+                                </MenuItem>
+                            </Menu>
+                        </Grid>
+                    </Grid>
+                </Box>
+            </div>
+            <Button
+              style={{background: 'white', color: '#142e36', marginBottom: '1%', marginTop: '1%'}}
+              >{props.additionTitle}</Button>
         </Box>
     );
 }
