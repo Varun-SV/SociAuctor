@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { app } from '../firebase';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { useHistory } from 'react-router-dom';
 import {getFirestore } from "@firebase/firestore";
 import {addDoc, collection, getDocs,doc, updateDoc } from "@firebase/firestore";
@@ -35,10 +35,15 @@ export default function SignupPage() {
   var firestore = null;
   var ref = null;
   
-  if(auth !== undefined){
-    firestore = getFirestore(app);
-    ref = collection(firestore,"users/");
-  }
+  onAuthStateChanged(auth, async(user) => {
+    if (!user) {
+      const uid = user.uid;
+      firestore = getFirestore(app);
+      ref = collection(firestore, 'users/');
+    } else {
+      history.push('/');
+    }
+  });
   
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;

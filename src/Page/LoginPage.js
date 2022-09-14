@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './styles/LoginPage.css';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { app } from '../firebase';
 import { useHistory } from 'react-router-dom';
 import Snackbar from '@mui/material/Snackbar';
@@ -46,6 +46,12 @@ function LoginPage() {
     
     const auth = getAuth(app);
     let history = useHistory();
+    
+    onAuthStateChanged(auth, async(user) => {
+      if (user) {
+        history.push('/');
+      }
+    });
   
     const handleSubmit = (event) => {
         event.preventDefault();
