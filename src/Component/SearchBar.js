@@ -74,7 +74,7 @@ const SearchBarWidget = (props)=>{
     const [openSale, setOpenSale] = React.useState(false);
     const [openAct, setOpenAct] = React.useState(false);
     const fileTypes = ["JPG", "PNG", "JPEG"];
-    const [files, setFiles] = React.useState();
+    const [files, setFiles] = React.useState([]);
     const saleCategories = ['Antiques', 'Handicraft', 'Paintings', 'Statues', 'Collectible'];
     const [saleCategory, setSaleCategory] = React.useState("");
     const [saleCurrency, setSaleCurrency] = React.useState("");
@@ -107,8 +107,16 @@ const SearchBarWidget = (props)=>{
     };
     
     const handleFileChange = (file) => {
-        setFiles(file);
-        console.log(files);
+        console.log(file);
+        console.log([...file]);
+        [...file].map((file_)=>{
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                console.log(e.target.result);
+                setFiles(prevState => ([...prevState,e.target.result]));
+            };
+            reader.readAsDataURL(file_);
+        });
       };
     
     const handleSalesCategoryChange = (event) => {
@@ -301,8 +309,8 @@ const SearchBarWidget = (props)=>{
                   <FileUploader handleChange={handleFileChange} name="file" types={fileTypes} multiple /><br/>
                   <Grid>
                     {
-                        files && [...files].map((file)=>{
-                            <img src={URL.createObjectURL(file)} width='5%' height='5%'/>
+                        files.map((file)=>{
+                            return (<img src={file} width='50px' height='50px'/>)
                         })
                     }
                   </Grid>
@@ -320,7 +328,7 @@ const SearchBarWidget = (props)=>{
                         value={saleCategory}
                       >
                         {saleCategories.map((category)=>{
-                            return (<MenuItem value={category}>
+                            return (<MenuItem value={category} key={category}>
                                 <Typography>{category}</Typography>
                             </MenuItem>)
                         })
@@ -336,7 +344,7 @@ const SearchBarWidget = (props)=>{
                         value={saleCurrency}
                       >
                         {currencyList.map((category)=>{
-                            return (<MenuItem value={category}>
+                            return (<MenuItem value={category} key={category}>
                                 <Typography>{category}</Typography>
                             </MenuItem>)
                         })
