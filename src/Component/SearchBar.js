@@ -13,6 +13,12 @@ import Modal from '@mui/material/Modal';
 import { FileUploader } from "react-drag-drop-files";
 import currencyJson from '../assets/Common-Currency.json';
 import DurationPicker from 'react-duration-picker';
+import { getStorage, ref, uploadBytes } from "firebase/storage";
+import {getFirestore } from "@firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useHistory } from 'react-router-dom';
+import {addDoc, collection, getDocs,doc, updateDoc } from "@firebase/firestore";
+import { app } from '../firebase';
 
 const Search = styled('div')(({ theme,width }) => ({
     position: 'relative',
@@ -62,7 +68,7 @@ const Search = styled('div')(({ theme,width }) => ({
     borderRadius: 2,
     p: 4,
     width: '30%',
-    height: '120%',
+    maxHeight: '120%',
     overflowY: 'scroll'
   };
 
@@ -76,10 +82,34 @@ const SearchBarWidget = (props)=>{
     const [openAct, setOpenAct] = React.useState(false);
     const fileTypes = ["JPG", "PNG", "JPEG"];
     const [files, setFiles] = React.useState([]);
+    const [rawFiles, setRawFiles] = React.useState([]);
     const saleCategories = ['Antiques', 'Handicraft', 'Paintings', 'Statues', 'Collectible'];
     const [saleCategory, setSaleCategory] = React.useState("");
     const currencyList = Object.keys(currencyJson);
     const [saleCurrency, setSaleCurrency] = React.useState(currencyList[0]);
+    var storage = null;
+    
+    const auth = getAuth(app);
+    let history = useHistory();
+    
+    var firestore = null;
+    var usersRef = null;
+    var dealsRef = null;
+    var activityRef = null;
+    var uid = null;
+    
+    onAuthStateChanged(auth, async(user) => {
+      if (user) {
+        uid = user.uid;
+        firestore = getFirestore(app);
+        usersRef = collection(firestore, 'users/');
+        dealsRef = collection(firestore, 'deals/');
+        activityRef = collection(firestore, 'activities/');
+        storage = getStorage(app);
+      } else {
+        history.push('login/');
+      }
+    });
     
     const handleOpenSale = () => setOpenSale(true);
     const handleOpenAct = () => setOpenAct(true);
@@ -108,6 +138,9 @@ const SearchBarWidget = (props)=>{
     
     const handleFileChange = (file) => {
         [...file].map((file_)=>{
+            setRawFiles(prevState => ([...prevState, file_]));
+        });
+        [...file].map((file_)=>{
             let reader = new FileReader();
             reader.onload = (e) => {
                 setFiles(prevState => ([...prevState,e.target.result]));
@@ -125,7 +158,59 @@ const SearchBarWidget = (props)=>{
     }
     
     const handleDealSubmit = (event) => {
-        
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const saleItemName = data.get('saleItemName');
+        const selectSalesCategory = data.get('selectSalesCategory');
+        const selectSalesCurrency = data.get('selectSalesCurrency');
+        const minimumBidAmount = data.get('minimumBidAmount');
+        const BiddingDeadline = data.get('BiddingDeadline');
+        const socialCauseSales = data.get('socialCauseSales');
+        const salesBidDuration = data.get('salesBidDuration');
+        if(files.length){
+            addDoc(dealsRef, {
+                artist: uid,
+                item_name: saleItemName,
+                category: selectSalesCategory, 
+                currency: selectSalesCurrency,
+                minimum_bid: minimumBidAmount,
+                bid_deadline: BiddingDeadline,
+                social_cause: socialCauseSales,
+                bid_duration: salesBidDuration
+            }).then((result)=>{
+                [...rawFiles].map((f)=>{
+                    uploadBytes(ref(storage, result.id + '/' + f.name), f).then((snapshot)=>{
+                        history.push('/');
+                    })
+                })
+            })
+        }
+    };
+    
+    const handleActivitySubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const activityName = data.get('activityName');
+        const activityCategory = data.get('activityCategory');
+        const activityCurrency = data.get('activityCurrency');
+        const activityRequiredAmount = data.get('activityRequiredAmount');
+        const activityDueDate = data.get('activityDueDate');
+        if(files.length){
+            addDoc(activityRef, {
+                poster: uid,
+                activity_name: activityName,
+                category: activityCategory,
+                currency: activityCurrency,
+                required_amount: activityRequiredAmount,
+                due_date: activityDueDate
+            }).then((result)=>{
+                [...rawFiles].map((f)=>{
+                    uploadBytes(ref(storage, result.id + '/' + f.name), f).then((snapshot)=>{
+                        history.push('/');
+                    })
+                })
+            })
+        }
     };
 
     return(
@@ -329,6 +414,7 @@ const SearchBarWidget = (props)=>{
                         labelId='deal-category-select-label'
                         label='Select Category'
                         onChange={handleSalesCategoryChange}
+                        name='selectSalesCategory'
                         value={saleCategory}
                       >
                         {saleCategories.map((category)=>{
@@ -346,6 +432,7 @@ const SearchBarWidget = (props)=>{
                         label='Select Currency'
                         onChange={handleSalesCurrencyChange}
                         value={saleCurrency}
+                        name='selectSalesCurrency'
                       >
                         {currencyList.map((category)=>{
                             return (<MenuItem value={category} key={category}>
@@ -364,6 +451,7 @@ const SearchBarWidget = (props)=>{
                   <br/>
                   <Typography>Select bid challenge duration</Typography><br/>
                   <DurationPicker
+                    name='salesBidDuration'
                     initialDuration={{ hours: 1, minutes: 2, seconds: 3 }}
                     maxHours={5}
                   /><br/><br/>
@@ -371,7 +459,6 @@ const SearchBarWidget = (props)=>{
                   <TextField  
                     name='BiddingDeadline'
                     type='datetime-local'
-                    onChange={(e)=>{console.log(new Date(e.target.value).toUTCString());}}
                     style={{width:'100%'}}/>
                   <br/>
                   <br/>
@@ -380,14 +467,14 @@ const SearchBarWidget = (props)=>{
                       id="combo-box-demo"
                       options={['Heart Operation', 'Kidney Surgery']}
                       sx={{ width: '100%', marginTop: '1%' }}
-                      renderInput={(params) => <TextField {...params} label="Funding Activity" />}
+                      renderInput={(params) => <TextField {...params} label="Funding Activity" name='socialCauseSales' />}
                   /><br/><br/>
                   <Button type="submit" style={{width: '100%', background: '#142e36', color: 'white', fontSize: '100%'}}>{props.additionTitle}</Button>
                   </form>
                   :
-                  <form onSubmit={handleDealSubmit}>
+                  <form onSubmit={handleActivitySubmit}>
                   <TextField
-                    name = "saleItemName"
+                    name = "activityName"
                     placeholder="Title"
                     style={{width: '100%'}}
                   /><br/><br/>
@@ -398,6 +485,7 @@ const SearchBarWidget = (props)=>{
                         label='Select Category'
                         onChange={handleSalesCategoryChange}
                         value={saleCategory}
+                        name='activityCategory'
                       >
                         {saleCategories.map((category)=>{
                             return (<MenuItem value={category} key={category}>
@@ -414,6 +502,7 @@ const SearchBarWidget = (props)=>{
                         label='Select Currency'
                         onChange={handleSalesCurrencyChange}
                         value={saleCurrency}
+                        name='activityCurrency'
                       >
                         {currencyList.map((category)=>{
                             return (<MenuItem value={category} key={category}>
@@ -424,8 +513,8 @@ const SearchBarWidget = (props)=>{
                       </Select>
                   </FormControl>
                   <TextField 
-                    placeholder='Minimum bid amount' 
-                    name='minimumBidAmount'
+                    placeholder='Required Amount' 
+                    name='activityRequiredAmount'
                     type={'number'}
                     style={{width:'auto'}}/>
                   <br/>
@@ -440,9 +529,8 @@ const SearchBarWidget = (props)=>{
                     }
                   </Grid>
                   <TextField  
-                    name='EventDateTime'
+                    name='activityDueDate'
                     type='datetime-local'
-                    onChange={(e)=>{console.log(new Date(e.target.value).toUTCString());}}
                     style={{width:'100%'}}/>
                   <br/>
                   <br/>
