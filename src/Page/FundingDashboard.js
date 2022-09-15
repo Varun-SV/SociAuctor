@@ -40,11 +40,15 @@ function FundingDashboard() {
       var activitiesArray = [];
       var querySnapshot = await getDocs(usersRef);
       querySnapshot.docs.forEach((doc)=>{
-        usersArray.push(doc.data())
+        var tmp = doc.data();
+        tmp['pushKey'] = doc.id;
+        usersArray.push(tmp)
       });
       querySnapshot = await getDocs(activityRef);
       querySnapshot.docs.forEach((doc)=>{
-        activitiesArray.push(doc.data())
+        var tmp = doc.data();
+        tmp['pushKey'] = doc.id;
+        activitiesArray.push(tmp)
       });
       setActivities(activitiesArray);
       setUsers(usersArray);
