@@ -87,6 +87,7 @@ const SearchBarWidget = (props)=>{
     const [saleCategory, setSaleCategory] = React.useState("");
     const currencyList = Object.keys(currencyJson);
     const [saleCurrency, setSaleCurrency] = React.useState(currencyList[0]);
+    const [loading, setLoading] = React.useState(false);
     var storage = null;
     
     const auth = getAuth(app);
@@ -159,57 +160,71 @@ const SearchBarWidget = (props)=>{
     
     const handleDealSubmit = (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const saleItemName = data.get('saleItemName');
-        const selectSalesCategory = data.get('selectSalesCategory');
-        const selectSalesCurrency = data.get('selectSalesCurrency');
-        const minimumBidAmount = data.get('minimumBidAmount');
-        const BiddingDeadline = data.get('BiddingDeadline');
-        const socialCauseSales = data.get('socialCauseSales');
-        const salesBidDuration = data.get('salesBidDuration');
-        if(files.length){
-            addDoc(dealsRef, {
-                artist: uid,
-                item_name: saleItemName,
-                category: selectSalesCategory, 
-                currency: selectSalesCurrency,
-                minimum_bid: minimumBidAmount,
-                bid_deadline: BiddingDeadline,
-                social_cause: socialCauseSales,
-                bid_duration: salesBidDuration
-            }).then((result)=>{
-                [...rawFiles].map((f)=>{
-                    uploadBytes(ref(storage, result.id + '/' + f.name), f).then((snapshot)=>{
-                        history.push('/');
+        setLoading(true);
+        try{
+            const data = new FormData(event.currentTarget);
+            const saleItemName = data.get('saleItemName');
+            const selectSalesCategory = data.get('selectSalesCategory');
+            const selectSalesCurrency = data.get('selectSalesCurrency');
+            const minimumBidAmount = data.get('minimumBidAmount');
+            const BiddingDeadline = data.get('BiddingDeadline');
+            const socialCauseSales = data.get('socialCauseSales');
+            const salesBidDuration = data.get('salesBidDuration');
+            if(files.length){
+                addDoc(dealsRef, {
+                    artist: uid,
+                    item_name: saleItemName,
+                    category: selectSalesCategory, 
+                    currency: selectSalesCurrency,
+                    minimum_bid: minimumBidAmount,
+                    bid_deadline: BiddingDeadline,
+                    social_cause: socialCauseSales,
+                    bid_duration: salesBidDuration
+                }).then((result)=>{
+                    [...rawFiles].map((f)=>{
+                        uploadBytes(ref(storage, result.id + '/' + f.name), f).then((snapshot)=>{
+                            setLoading(false);
+                            history.push('/');
+                        })
                     })
                 })
-            })
+            }
+        }
+        catch(err){
+            setLoading(false);
         }
     };
     
     const handleActivitySubmit = (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const activityName = data.get('activityName');
-        const activityCategory = data.get('activityCategory');
-        const activityCurrency = data.get('activityCurrency');
-        const activityRequiredAmount = data.get('activityRequiredAmount');
-        const activityDueDate = data.get('activityDueDate');
-        if(files.length){
-            addDoc(activityRef, {
-                poster: uid,
-                activity_name: activityName,
-                category: activityCategory,
-                currency: activityCurrency,
-                required_amount: activityRequiredAmount,
-                due_date: activityDueDate
-            }).then((result)=>{
-                [...rawFiles].map((f)=>{
-                    uploadBytes(ref(storage, result.id + '/' + f.name), f).then((snapshot)=>{
-                        history.push('/');
+        setLoading(true);
+        try{
+            const data = new FormData(event.currentTarget);
+            const activityName = data.get('activityName');
+            const activityCategory = data.get('activityCategory');
+            const activityCurrency = data.get('activityCurrency');
+            const activityRequiredAmount = data.get('activityRequiredAmount');
+            const activityDueDate = data.get('activityDueDate');
+            if(files.length){
+                addDoc(activityRef, {
+                    poster: uid,
+                    activity_name: activityName,
+                    category: activityCategory,
+                    currency: activityCurrency,
+                    required_amount: activityRequiredAmount,
+                    due_date: activityDueDate
+                }).then((result)=>{
+                    [...rawFiles].map((f)=>{
+                        uploadBytes(ref(storage, result.id + '/' + f.name), f).then((snapshot)=>{
+                            setLoading(false);
+                            history.push('/');
+                        })
                     })
                 })
-            })
+            }
+        }
+        catch(err){
+            setLoading(false);
         }
     };
 
@@ -379,166 +394,171 @@ const SearchBarWidget = (props)=>{
               style={{background: 'white', color: '#142e36', marginBottom: '1%', marginTop: '1%'}}
               onClick={handleOpenSale}
               >{props.additionTitle}</Button>
+            {loading ? (
+                <Modal open={loading} className="loader-container">
+                <div className="spinner"></div>
+                </Modal>
+            ) : <div></div>}
             <Modal
             open={openSale}
             onClose={handleCloseSale}
             style={{ marginTop: '8%', marginBottom: '20%', height: '65%', width: '100%'}}
             >
                 <Box sx={style}>
-                  <h1 className="cardTitle">{props.additionTitle}</h1>
-                  <br/>
-                  { props.additionTitle==="Add Deal"?
-                  <form onSubmit={handleDealSubmit}>
-                  <Typography>Upload the images of the item (atleast 3 images)</Typography><br/>
-                  <FileUploader handleChange={handleFileChange} name="file" types={fileTypes} multiple /><br/>
-                  <Grid style={{width: '100%', display: 'flex', overflow: 'scroll', marginBottom: '2%'}}>
+                <h1 className="cardTitle">{props.additionTitle}</h1>
+                <br/>
+                { props.additionTitle==="Add Deal"?
+                <form onSubmit={handleDealSubmit}>
+                <Typography>Upload the images of the item (atleast 3 images)</Typography><br/>
+                <FileUploader handleChange={handleFileChange} name="file" types={fileTypes} multiple /><br/>
+                <Grid style={{width: '100%', display: 'flex', overflow: 'scroll', marginBottom: '2%'}}>
                     {
                         files.map((file)=>{
                             return (<img src={file} width='30%' height='30%'/>)
                         })
                     }
-                  </Grid>
-                  <a href={"#"}
+                </Grid>
+                <a href={"#"}
                     onClick={()=>{setFiles([])}}
                     style={{marginBottom: '5px'}}>
                     Clear
-                  </a><br/>
-                  <TextField
+                </a><br/>
+                <TextField
                     name = "saleItemName"
                     placeholder="Item Name"
                     style={{width: '100%', marginTop: '3%'}}
-                  /><br/><br/>
-                  <FormControl style={{width: '100%'}}>
-                      <InputLabel id="deal-category-select-label">Select Category</InputLabel>
-                      <Select
+                /><br/><br/>
+                <FormControl style={{width: '100%'}}>
+                    <InputLabel id="deal-category-select-label">Select Category</InputLabel>
+                    <Select
                         labelId='deal-category-select-label'
                         label='Select Category'
                         onChange={handleSalesCategoryChange}
                         name='selectSalesCategory'
                         value={saleCategory}
-                      >
+                    >
                         {saleCategories.map((category)=>{
                             return (<MenuItem value={category} key={category}>
                                 <Typography>{category}</Typography>
                             </MenuItem>)
                         })
                         }
-                      </Select>
-                  </FormControl><br/><br/>
-                  <FormControl style={{width:'40%'}}>
-                      <InputLabel id="deal-currency-select-label">Select Currency</InputLabel>
-                      <Select
+                    </Select>
+                </FormControl><br/><br/>
+                <FormControl style={{width:'40%'}}>
+                    <InputLabel id="deal-currency-select-label">Select Currency</InputLabel>
+                    <Select
                         labelId='deal-currency-select-label'
                         label='Select Currency'
                         onChange={handleSalesCurrencyChange}
                         value={saleCurrency}
                         name='selectSalesCurrency'
-                      >
+                    >
                         {currencyList.map((category)=>{
                             return (<MenuItem value={category} key={category}>
                                 <Typography>{category}</Typography>
                             </MenuItem>)
                         })
                         }
-                      </Select>
-                  </FormControl>
-                  <TextField 
+                    </Select>
+                </FormControl>
+                <TextField 
                     placeholder='Minimum bid amount' 
                     name='minimumBidAmount'
                     type={'number'}
                     style={{width:'auto'}}/>
-                  <br/>
-                  <br/>
-                  <Typography>Select bid challenge duration</Typography><br/>
-                  <DurationPicker
+                <br/>
+                <br/>
+                <Typography>Select bid challenge duration</Typography><br/>
+                <DurationPicker
                     name='salesBidDuration'
                     initialDuration={{ hours: 1, minutes: 2, seconds: 3 }}
                     maxHours={5}
-                  /><br/><br/>
-                  <Typography>Select bid challenge deadline</Typography><br/>
-                  <TextField  
+                /><br/><br/>
+                <Typography>Select bid challenge deadline</Typography><br/>
+                <TextField  
                     name='BiddingDeadline'
                     type='datetime-local'
                     style={{width:'100%'}}/>
-                  <br/>
-                  <br/>
-                  <Autocomplete
-                      disablePortal
-                      id="combo-box-demo"
-                      options={['Heart Operation', 'Kidney Surgery']}
-                      sx={{ width: '100%', marginTop: '1%' }}
-                      renderInput={(params) => <TextField {...params} label="Funding Activity" name='socialCauseSales' />}
-                  /><br/><br/>
-                  <Button type="submit" style={{width: '100%', background: '#142e36', color: 'white', fontSize: '100%'}}>{props.additionTitle}</Button>
-                  </form>
-                  :
-                  <form onSubmit={handleActivitySubmit}>
-                  <TextField
+                <br/>
+                <br/>
+                <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={['Heart Operation', 'Kidney Surgery']}
+                    sx={{ width: '100%', marginTop: '1%' }}
+                    renderInput={(params) => <TextField {...params} label="Funding Activity" name='socialCauseSales' />}
+                /><br/><br/>
+                <Button type="submit" style={{width: '100%', background: '#142e36', color: 'white', fontSize: '100%'}}>{props.additionTitle}</Button>
+                </form>
+                :
+                <form onSubmit={handleActivitySubmit}>
+                <TextField
                     name = "activityName"
                     placeholder="Title"
                     style={{width: '100%'}}
-                  /><br/><br/>
-                  <FormControl style={{width: '100%'}}>
-                      <InputLabel id="deal-category-select-label">Select Category</InputLabel>
-                      <Select
+                /><br/><br/>
+                <FormControl style={{width: '100%'}}>
+                    <InputLabel id="deal-category-select-label">Select Category</InputLabel>
+                    <Select
                         labelId='deal-category-select-label'
                         label='Select Category'
                         onChange={handleSalesCategoryChange}
                         value={saleCategory}
                         name='activityCategory'
-                      >
+                    >
                         {saleCategories.map((category)=>{
                             return (<MenuItem value={category} key={category}>
                                 <Typography>{category}</Typography>
                             </MenuItem>)
                         })
                         }
-                      </Select>
-                  </FormControl><br/><br/>
-                  <FormControl style={{width:'40%'}}>
-                      <InputLabel id="deal-currency-select-label">Select Currency</InputLabel>
-                      <Select
+                    </Select>
+                </FormControl><br/><br/>
+                <FormControl style={{width:'40%'}}>
+                    <InputLabel id="deal-currency-select-label">Select Currency</InputLabel>
+                    <Select
                         labelId='deal-currency-select-label'
                         label='Select Currency'
                         onChange={handleSalesCurrencyChange}
                         value={saleCurrency}
                         name='activityCurrency'
-                      >
+                    >
                         {currencyList.map((category)=>{
                             return (<MenuItem value={category} key={category}>
                                 <Typography>{category}</Typography>
                             </MenuItem>)
                         })
                         }
-                      </Select>
-                  </FormControl>
-                  <TextField 
+                    </Select>
+                </FormControl>
+                <TextField 
                     placeholder='Required Amount' 
                     name='activityRequiredAmount'
                     type={'number'}
                     style={{width:'auto'}}/>
-                  <br/>
-                  <br/>
-                  <Typography>Upload the proof</Typography><br/>
-                  <FileUploader handleChange={handleFileChange} name="file" types={fileTypes} multiple /><br/>
-                  <Grid>
+                <br/>
+                <br/>
+                <Typography>Upload the proof</Typography><br/>
+                <FileUploader handleChange={handleFileChange} name="file" types={fileTypes} multiple /><br/>
+                <Grid>
                     {
                         files.map((file)=>{
                             return (<img src={file} width='50px' height='50px'/>)
                         })
                     }
-                  </Grid>
-                  <TextField  
+                </Grid>
+                <TextField  
                     name='activityDueDate'
                     type='datetime-local'
                     style={{width:'100%'}}/>
-                  <br/>
-                  <br/>
-                  <Button type="submit" style={{width: "100%", background: '#142e36', color: 'white'}}>{props.additionTitle}</Button>
-                  </form>
+                <br/>
+                <br/>
+                <Button type="submit" style={{width: "100%", background: '#142e36', color: 'white'}}>{props.additionTitle}</Button>
+                </form>
                 }
                 </Box>
-          </Modal>
+            </Modal>
         </Box>
     );
 }
