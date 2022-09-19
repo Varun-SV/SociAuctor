@@ -90,6 +90,7 @@ const SearchBarWidget = (props)=>{
     const [saleCurrency, setSaleCurrency] = React.useState(currencyList[0]);
     const [loading, setLoading] = React.useState(false);
     const [activitiesDict, setActivitiesDict] = React.useState([]);
+    const [bidDuration,setBidDuration] = React.useState();
     var storage = null;
     
     const auth = getAuth(app);
@@ -194,7 +195,6 @@ const SearchBarWidget = (props)=>{
             const minimumBidAmount = data.get('minimumBidAmount');
             const BiddingDeadline = data.get('BiddingDeadline');
             const socialCauseSales = data.get('socialCauseSales').split(' | ')[1];
-            const salesBidDuration = data.get('salesBidDuration');
             if(files.length){
                 addDoc(dealsRef, {
                     artist: uid,
@@ -205,7 +205,7 @@ const SearchBarWidget = (props)=>{
                     minimum_bid: minimumBidAmount,
                     bid_deadline: BiddingDeadline,
                     social_cause: socialCauseSales,
-                    bid_duration: salesBidDuration
+                    bid_duration: bidDuration
                 }).then((result)=>{
                     [...rawFiles].map((f)=>{
                         uploadBytes(ref(storage, result.id + '/' + f.name), f).then((snapshot)=>{
@@ -506,6 +506,7 @@ const SearchBarWidget = (props)=>{
                 <Typography>Select bid challenge duration</Typography><br/>
                 <DurationPicker
                     name='salesBidDuration'
+                    onChange={(duration)=>{setBidDuration(duration)}}
                     initialDuration={{ hours: 1, minutes: 2, seconds: 3 }}
                     maxHours={5}
                 /><br/><br/>
