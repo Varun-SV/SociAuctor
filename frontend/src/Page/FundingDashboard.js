@@ -58,6 +58,7 @@ function FundingDashboard() {
       querySnapshot.docs.forEach((doc)=>{
         var tmp = doc.data();
         tmp['pushKey'] = doc.id;
+        tmp['imgLinks'] = [];
         const listRef = ref(storage, '/'+doc.id);
         listAll(listRef) // for every folder
             .then((res) => {
@@ -107,13 +108,13 @@ function FundingDashboard() {
             <div style={{margin:'3%'}}>
                 {/* {CardLayout(result[0])} */}
                 {
-                    result.map((item) => {
+                    result.slice(0,1).map((item,idx) => {
+
                     return(
-                        <div key={item} style={{margin:'1%'}}>
+                        <div key={idx} style={{margin:'1%'}}>
                             {console.log(activities)}
                             {console.log(users)}
-                            {CardLayout(item) // Here we are creating cards for each activity
-                            }
+                            {CardLayout(item)}
                         </div>
                         )
                     })
@@ -123,7 +124,7 @@ function FundingDashboard() {
     }
 
     return (
-        <div className="data" style={{background: 'transparent'}}>
+        <div className="data" style={{backgroundColor: 'transparent'}}>
             <AppBarWidget />
             <SearchBarWidget additionTitle="Add Activity" />
             <br/>

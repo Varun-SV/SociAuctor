@@ -1,15 +1,18 @@
 import { Card, CardContent, Typography } from "@mui/material";
 import './styles/FundingDashboard.css';
-import React from "react";
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import './styles/FundingDashboard.css';
 import { motion } from "framer-motion";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import Popup from 'reactjs-popup';
 import { Carousel } from 'react-responsive-carousel';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
 
+const CardLayout = (list) => {
 
-function CardLayout(list) {
+    // const [isOpen,setIsOpen] = useState(false);
+
     function Card_pop(){
         return(
             <div>
@@ -27,23 +30,21 @@ function CardLayout(list) {
     return (
         <div style={{
             display: 'flex',
-            flexDirection: 'coloumn',
+            flexDirection: 'coloumn'
         }}
         >
-            <Popup trigger={
-                <Card className="cards"
+            <Card className="cards"
                     id="cards"
+                    // onClick={()=>{setIsOpen(!isOpen)}}
                     style={{
                         width: "45%",
-                        backgroundColor: "white",
                         borderRadius: 10,
                         border: "5px solid #E5E5E5",
                         marginBottom: "5px",
-
                     }}
                 >
                     <CardContent>
-                        <div
+                        <div 
                             style={{
                                 display: 'fixed',
                                 flexDirection: 'column',
@@ -79,10 +80,8 @@ function CardLayout(list) {
                             <Typography
                                 style={{
                                     fontSize: 14,
-
                                 }}
                                 color="textSecondary"
-
                             >
                                 {"Required Amount"}
                             </Typography>
@@ -130,54 +129,70 @@ function CardLayout(list) {
                             </Popup>
                         </div>
                     </CardContent>
-                </Card>
-            }
-                position="center"
-                background-color="grey"
+            </Card>
+            <div>
+            <Modal
+                open={false}
+                // onClose={handleCloseSale}
+                style={{ marginTop: '8%', marginBottom: '20%', height: '65%', width: '100%'}}
+                >
+                    <Box sx={style}>
+                        <h1 className="cardTitle">Hello</h1>
+                        <br/>
+                    </Box>
+            {/* <div style={{
+                    disply: "flex",
+                    backgroundColor: "white",
+                    border: "2px solid #000",
+                    boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)",
+                    padding: "50px",
+                    borderRadius: "10px",
+                }}
             >
-                <div
-                    style={{
-                        disply: "flex",
-                        // width: "100%",
-                        position: "fixed",
-                        backgroundColor: "white",
-                        border: "2px solid #000",
-                        boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)",
-                        padding: "50px",
-                        borderRadius: "10px",
-                        overflow:"scroll"
+                <div 
+                    style=
+                    {{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "left",
+                        top: "0%"
                     }}
                 >
-                    <div
-                        style=
-                        {{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "left",
-                            top: "0%"
-
-                        }}
-                    >
-                        Flex direction towards right
-                        lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                    </div>
-                    <script type="text/javascript" src="https://apiv2.popupsmart.com/api/Bundle/392343" async></script>
-                    <div>
-                        <Carousel>
-                            <div>
-                                <img src="./assets/1.png"/>
-                            </div>
-                            <div>
-                                <img src="./assets/2.gif"/>
-                            </div>
-                        </Carousel>
-                    </div>
-                    Hello {list[0]}
+                    Flex direction towards right
+                    lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                 </div>
-            </Popup>
+                <script type="text/javascript" src="https://apiv2.popupsmart.com/api/Bundle/392343" async></script>
+                <div>
+                    <Carousel>
+                        <div>
+                            <img src="./assets/1.png"/>
+                        </div>
+                        <div>
+                            <img src="./assets/2.gif"/>
+                        </div>
+                    </Carousel>
+                </div>
+                Hello {list[0]}
+            </div> */}
+        </Modal>
         </div>
+    </div>
     );
-
 }
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    borderRadius: 2,
+    p: 4,
+    width: '30%',
+    maxHeight: '120%',
+    overflowY: 'scroll'
+  };
+
 export default CardLayout;
 
