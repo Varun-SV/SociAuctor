@@ -1,2 +1,7 @@
-- name: Docker Deployment
-  uses: wshihadeh/docker-deployment-action@v2
+- name: Deploy to Docker swarm
+  uses: wshihadeh/docker-deployment-action@v1
+  with:
+    deployment_mode: docker-swarm
+    copy_stack_file: true
+    deploy_path: /root/my-deployment
+    stack_file_name: docker-compose.yaml
