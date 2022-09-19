@@ -93,7 +93,7 @@ function FundingDashboard() {
             {
                 if(activities[j].poster===users[i].userId)
                 {
-                    result.push([activities[j].activity_name,activities[j].category,activities[j].required_amount,activities[j].currency,(users[i].firstName+" "+users[i].lastName),users[i].email,activities[j].pushKey,("Required Amount"),("Donate"),users[i].wallet_id]);
+                    result.push([activities[j].activity_name,activities[j].category,activities[j].required_amount,activities[j].currency,(users[i].firstName+" "+users[i].lastName),users[i].email,activities[j].pushKey,("Required Amount"),("Donate"),users[i].wallet_id,activities[j].imgLinks,activities[j].description]);
                 }
             }
             if(users[i].userId === firebaseAuth.currentUser.uid ){
@@ -117,7 +117,6 @@ function FundingDashboard() {
             </div>
             );
     }
-
     return (
         <div className="data" style={{backgroundColor: 'transparent',  backgroundImage: "url('../../assets/bg1.jpg')",
         backgroundSize: 'cover',

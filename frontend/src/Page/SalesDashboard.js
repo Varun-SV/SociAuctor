@@ -36,7 +36,7 @@ function SalesDashboard() {
             {
                 if(deals[j].artist===users[i].userId)
                 {
-                    result.push([deals[j].item_name,deals[j].category,deals[j].minimum_bid,deals[j].currency,(users[i].firstName+" "+users[i].lastName),users[i].email,deals[j].pushKey,("Starting Bid"),("Bid"),deals[j].social_cause]);
+                    result.push([deals[j].item_name,deals[j].category,deals[j].minimum_bid,deals[j].currency,(users[i].firstName+" "+users[i].lastName),users[i].email,deals[j].pushKey,("Starting Bid"),("Bid"),deals[j].social_cause,deals[j].imgLinks]);
                 }
                 
             }
@@ -97,7 +97,6 @@ function SalesDashboard() {
                     res.items.forEach((itemRef) => { // for every image
                         getDownloadURL(ref(storage, itemRef.fullPath))
                             .then((url) => {
-                                console.log(url); // URL for image
                                 tmp['imgLinks'].push(url);
                             })
                     })
@@ -108,7 +107,6 @@ function SalesDashboard() {
         setDeals(dealsArray);
         setUsers(usersArray);
     }
-
     return (
         <div style={{backgroundImage: "url('../../assets/bg1.jpg')",
         backgroundSize: 'cover',

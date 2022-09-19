@@ -3,9 +3,8 @@ import './styles/FundingDashboard.css';
 import React, { useEffect, useState } from "react";
 import './styles/FundingDashboard.css';
 import { motion } from "framer-motion";
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import Popup from 'reactjs-popup';
-import { Carousel } from 'react-responsive-carousel';
+import Carousel from 'framer-motion-carousel'
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -82,20 +81,8 @@ const CardLayout = (list) => {
           }) 
     }
 
-    function Card_pop(){
-        return(
-            <div>
-                <div class="sell" id="sell">
-                <div class="sell-head">
-                    <div class="title">Sell Your Craft</div>
-                    <button data-close-button class="close-button">&times;</button>
-                </div>
-                </div>
-                <div id="overlay"></div>
-            </div>
-        );
-        }
-    console.log(list);
+   
+
     return (
         <div>
             <Card className="cards"
@@ -170,46 +157,36 @@ const CardLayout = (list) => {
             <Modal
                 open={isOpenDesc}
                 onClose={()=>{setIsOpenDesc(false)}}
-                style={{ marginTop: '8%', marginBottom: '20%', height: '65%', width: '100%'}}
+                style={{ marginTop: '2%', marginBottom: '20%', height: '65%', width: '100%'}}
                 >
                     <Box sx={style}>
-                        <h1 className="cardTitle">Hello</h1>
+                        <div style={{display:'flex', flexDirection:'row',justifyContent:'space-between'}}>
+                        
+                        
+                        <h1 className="cardTitle">{list[0]}</h1>
+                        {/* <Carousel>
+                            {list[10].map((item, index) => (
+                                <div 
+                                key={index}
+                                className="carousel-items"
+                                style={{backgroundColor:list[index]}}
+                                ></div>                                
+                            ))}
+                        </Carousel> */}
+
+                        <div 
+                            style={{
+                                // display:'flex',
+                                flexDirection:'column',
+                            }}
+                        >
+                            <Typography>{list[11]!==undefined?(list[11]):(<p style={{fontFamily:"Roboto", fontWeight:'bold'}}>{list[1]+" by "+list[4]}</p>)}</Typography>
+                        </div>
+                        
                         <br/>
+                        </div>
                     </Box>
-            {/* <div style={{
-                    disply: "flex",
-                    backgroundColor: "white",
-                    border: "2px solid #000",
-                    boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)",
-                    padding: "50px",
-                    borderRadius: "10px",
-                }}
-            >
-                <div 
-                    style=
-                    {{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "left",
-                        top: "0%"
-                    }}
-                >
-                    Flex direction towards right
-                    lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </div>
-                <script type="text/javascript" src="https://apiv2.popupsmart.com/api/Bundle/392343" async></script>
-                <div>
-                    <Carousel>
-                        <div>
-                            <img src="./assets/1.png"/>
-                        </div>
-                        <div>
-                            <img src="./assets/2.gif"/>
-                        </div>
-                    </Carousel>
-                </div>
-                Hello {list[0]}
-            </div> */}
+         
         </Modal>
         <Modal
                 open={donate}
