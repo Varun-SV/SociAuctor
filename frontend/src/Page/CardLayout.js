@@ -75,11 +75,25 @@ const CardLayout = (list) => {
                                 color="textSecondary"
 
                             >
-                                {"Category : " + list[1]}
+                                {"Category | Unique ID : (" + list[1]+" | "+list[6]+")"} 
+                                {<button  
+                                    style={{
+                                        backgroundColor: "transparent",
+                                        border: "none",
+                                        color: "blue",
+                                        textDecoration: "underline",
+                                        cursor: "pointer",
+                                        fontSize: 14,
+                                        fontWeight: 'bold',
+                                        fontFamily: 'Roboto',
+                                        
+                                    }}
+                                    onClick={() =>  navigator.clipboard.writeText(list[6])}>copy</button>}
                             </Typography>
                             <Typography
                                 style={{
                                     fontSize: 14,
+                                    textAlign:"right,"
                                 }}
                                 color="textSecondary"
                             >
