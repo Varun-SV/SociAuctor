@@ -86,7 +86,7 @@ const CardLayout = (list) => {
                                         fontSize: 14,
                                         fontWeight: 'bold',
                                         fontFamily: 'Roboto',
-                                        
+
                                     }}
                                     onClick={() =>  navigator.clipboard.writeText(list[6])}>copy</button>}
                             </Typography>
@@ -97,7 +97,7 @@ const CardLayout = (list) => {
                                 }}
                                 color="textSecondary"
                             >
-                                {"Required Amount"}
+                                {list[7]}
                             </Typography>
                         </div>
                         <div
@@ -121,7 +121,7 @@ const CardLayout = (list) => {
                                 textAlign: "right",
                             }}
                         >
-                            <Popup trigger={<button> Donate </button>}
+                            <Popup trigger={<button> {list[8]} </button>}
                                 position="center">
                                 <div
                                     style={{

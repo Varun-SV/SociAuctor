@@ -100,7 +100,7 @@ function FundingDashboard() {
             {
                 if(activities[j].poster===users[i].userId)
                 {
-                    result.push([activities[j].activity_name,activities[j].category,activities[j].required_amount,activities[j].currency,(users[i].firstName+" "+users[i].lastName),users[i].email,activities[j].pushKey]);
+                    result.push([activities[j].activity_name,activities[j].category,activities[j].required_amount,activities[j].currency,(users[i].firstName+" "+users[i].lastName),users[i].email,activities[j].pushKey,("Required Amount"),("Donate")]);
                 }                
             }
         }

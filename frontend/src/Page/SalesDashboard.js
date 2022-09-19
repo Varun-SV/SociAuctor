@@ -38,7 +38,7 @@ function SalesDashboard() {
             {
                 if(deals[j].artist===users[i].userId)
                 {
-                    result.push([deals[j].item_name,deals[j].category,deals[j].minimum_bid,deals[j].currency,(users[i].firstName+" "+users[i].lastName),users[i].email,deals[j].pushKey,deals[j].social_cause]);
+                    result.push([deals[j].item_name,deals[j].category,deals[j].minimum_bid,deals[j].currency,(users[i].firstName+" "+users[i].lastName),users[i].email,deals[j].pushKey,("Starting Bid"),("Bid"),deals[j].social_cause]);
                 }
                 
             }
