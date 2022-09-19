@@ -29,3 +29,29 @@ body{
         transform: rotate(360deg);
     }
 }
+
+.cards {
+    grid-template: 1fr 1fr 1fr / 1fr 1fr 1fr;
+    /* justify-content:center; */
+    align-items: center;
+}
+.card {
+    background-color: "white";
+    padding:3rem 5rem;
+}
+.data {
+    /* display: flex; */
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.card p{
+    background-color:"white";
+    padding-top: 1rem;
+    line-height: 10%;
+}
+.card_det.details{
+    /* width: "window.innerWidth"; */
+    background-color: white;
+    font-weight:1px;
+}

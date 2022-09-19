@@ -7,7 +7,14 @@ import { app } from '../firebase';
 import { useHistory } from 'react-router-dom';
 import {addDoc, collection, getDocs, doc, updateDoc } from "@firebase/firestore";
 import {getFirestore } from "@firebase/firestore";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { MotionConfig } from "framer-motion";
+import {motion} from 'framer-motion';
+import { stringify } from "@firebase/util";
+import {CardActions} from '@mui/material';
+import CardLayout from './CardLayout';
+import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
+import Modal from '@mui/material/Modal';
 import createPayment from "../utils/Rapyd";
 
 function FundingDashboard() {
@@ -21,6 +28,7 @@ function FundingDashboard() {
     
     var [activities, setActivities] = React.useState([]);
     var [users, setUsers] = React.useState([]);
+    const [loading, setLoading] = React.useState(false);
 
     onAuthStateChanged(firebaseAuth, async(user) => {
         if (user) {
@@ -39,6 +47,7 @@ function FundingDashboard() {
     const fetchData = async() => {
       var usersArray = [];
       var activitiesArray = [];
+      const storage = getStorage();
       var querySnapshot = await getDocs(usersRef);
       querySnapshot.docs.forEach((doc)=>{
         var tmp = doc.data();
@@ -49,6 +58,18 @@ function FundingDashboard() {
       querySnapshot.docs.forEach((doc)=>{
         var tmp = doc.data();
         tmp['pushKey'] = doc.id;
+        const listRef = ref(storage, '/'+doc.id);
+        listAll(listRef) // for every folder
+            .then((res) => {
+                res.items.forEach((itemRef)=>{ // for every image
+                    getDownloadURL(ref(storage, itemRef.fullPath))
+                        .then((url) => {
+                            console.log(url); // URL for image
+                            tmp['imgLinks'].push(url);
+                        })
+                })
+            }).catch((error) => {
+            });
         activitiesArray.push(tmp)
       });
       setActivities(activitiesArray);
@@ -61,21 +82,56 @@ function FundingDashboard() {
       }) */
     }, []);
 
+    let result=[];
+    
+    function List_adder()
+    {
+        // setLoading(false);
+        // if (users.length===0){
+        //     setLoading(true);
+        // }
+        console.log(users);
+        const [isOpen, setIsOpen] = useState(false);
+        for(let i=0;i<users.length;i++)
+        {
+            console.log("inside adding function")
+            for (let j=0;  j<activities.length ;j++)
+            {
+                if(activities[j].poster===users[i].userId)
+                {
+                    result.push([activities[j].activity_name,activities[j].category,activities[j].required_amount,activities[j].currency,(users[i].firstName+" "+users[i].lastName),users[i].email,activities[j].pushKey]);
+                }                
+            }
+        }
+        return (            
+            <div style={{margin:'3%'}}>
+                {/* {CardLayout(result[0])} */}
+                {
+                    result.map((item) => {
+                    return(
+                        <div key={item} style={{margin:'1%'}}>
+                            {console.log(activities)}
+                            {console.log(users)}
+                            {CardLayout(item) // Here we are creating cards for each activity
+                            }
+                        </div>
+                        )
+                    })
+                }
+            </div>
+            );
+    }
+
     return (
-        <div style={{background: 'white', height: '100vh'}}>
+        <div className="data" style={{background: 'transparent'}}>
             <AppBarWidget />
             <SearchBarWidget additionTitle="Add Activity" />
             <br/>
-            {activities.map((act)=>{
-                return(
-                    <Typography>{JSON.stringify(act)}</Typography>
-                )
-            })}
-            {users.map((act)=>{
-                return(
-                    <Typography>{JSON.stringify(act)}</Typography>
-                )
-            })}
+            {loading ? (
+                <Modal open={loading} className="loader-container">
+                <div className="spinner"></div>
+                </Modal>
+            ) : List_adder()}  
         </div>
     );
 }

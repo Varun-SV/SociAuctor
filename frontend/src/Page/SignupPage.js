@@ -37,7 +37,6 @@ export default function SignupPage() {
   
   onAuthStateChanged(auth, async(user) => {
     if (!user) {
-      const uid = user.uid;
       firestore = getFirestore(app);
       ref = collection(firestore, 'users/');
     } else {
