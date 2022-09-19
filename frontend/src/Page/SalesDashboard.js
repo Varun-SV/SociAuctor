@@ -112,7 +112,9 @@ function SalesDashboard() {
     }
 
     return (
-        <div style={{ background: 'white', height: '100vh' }}>
+        <div style={{backgroundImage: "url('../../assets/bg1.jpg')",
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat'}}>
             <AppBarWidget />
             <SearchBarWidget additionTitle="Add Deal" />
             {console.log(deals)}

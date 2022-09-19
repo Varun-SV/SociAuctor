@@ -186,8 +186,9 @@ const CardLayout = (list) => {
                 style={{ marginTop: '8%', marginBottom: '20%', height: '65%', width: '100%'}}
                 >
                     <Box sx={style}>
-                    <h1 className="cardTitle">Donate</h1>
+                    <h1 className="cardTitle">list[8]</h1>
                     <br/>
+                    {list[8]==="donate"?
                     <form onSubmit={handleDonate}>
                     <div style={{display:"flex",flexDirection:"row", justifyContent:"space-evenly"}}>
                         <FormControl style={{width:'40%'}}>
@@ -217,6 +218,9 @@ const CardLayout = (list) => {
                     <br/>
                     <Button type="submit" style={{width: '100%', background: '#142e36', color: 'white', fontSize: '100%'}}>Donate</Button>
                     </form>
+                    :
+                    <div></div>
+                    }
                     </Box>
         </Modal>
         <Snackbar open={messageOpen} autoHideDuration={6000} onClose={handleClose}>
