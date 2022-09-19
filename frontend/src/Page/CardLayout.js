@@ -45,8 +45,8 @@ const CardLayout = (list) => {
         const data = new FormData(event.currentTarget);
         const selectSalesCurrency = data.get('selectSalesCurrency');
         const donationAmount = data.get("donationAmound");
-        console.log(donationAmount);
-        createPayment(donationAmount, 'US', selectSalesCurrency, list[3]).then((res)=>{
+        console.log(list);
+        createPayment(donationAmount, list[9], selectSalesCurrency, list[3]).then((res)=>{
             window.location.href = res.redirect_url;
           }) 
     }

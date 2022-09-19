@@ -29,11 +29,9 @@ function SalesDashboard() {
         // if (users.length===0){
         //     setLoading(true);
         // }
-        console.log(users);
         const [isOpen, setIsOpen] = useState(false);
         for(let i=0;i<users.length;i++)
         {
-            console.log("inside adding function")
             for (let j=0;  j<deals.length ;j++)
             {
                 if(deals[j].artist===users[i].userId)
@@ -117,7 +115,6 @@ function SalesDashboard() {
         backgroundRepeat: 'no-repeat'}}>
             <AppBarWidget />
             <SearchBarWidget additionTitle="Add Deal" />
-            {console.log(deals)}
             {List_adder()}
         </div>
     );
