@@ -1,0 +1,16 @@
+version: '3'
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    container_name: sociauctor-frontend
+    restart: always
+    links:
+      - backend
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    container_name: sociauctor-frontend
+    restart: always

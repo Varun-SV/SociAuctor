@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom';
 import {addDoc, collection, getDocs, doc, updateDoc } from "@firebase/firestore";
 import {getFirestore } from "@firebase/firestore";
 import React, { useEffect } from "react";
+import createPayment from "../utils/Rapyd";
 
 function FundingDashboard() {
 
@@ -53,6 +54,12 @@ function FundingDashboard() {
       setActivities(activitiesArray);
       setUsers(usersArray);
     }
+    
+    useEffect(()=>{
+      /* createPayment(500, 'US', 'USD', 'USD').then((res)=>{
+        window.location.href = res.redirect_url;
+      }) */
+    }, []);
 
     return (
         <div style={{background: 'white', height: '100vh'}}>

@@ -1,3 +1,4 @@
+import React from "react";
 import AppBarWidget from "../Component/AppBar";
 import SearchBarWidget from '../Component/SearchBar';
 import './styles/SalesDashboard.css';
