@@ -11,6 +11,6 @@ services:
   backend:
     build: ./backend
     ports:
-      - "8080:8080"
-    container_name: sociauctor-frontend
+      - "3001:3001"
+    container_name: sociauctor-backend
     restart: always
