@@ -14,7 +14,7 @@ import { FileUploader } from "react-drag-drop-files";
 import currencyJson from '../assets/Common-Currency.json';
 import DurationPicker from 'react-duration-picker';
 import { getStorage, ref, uploadBytes } from "firebase/storage";
-import { getFirestore } from "@firebase/firestore";
+import {getFirestore } from "@firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useHistory } from 'react-router-dom';
 import {addDoc, collection, getDocs,doc, updateDoc } from "@firebase/firestore";
@@ -193,7 +193,7 @@ const SearchBarWidget = (props)=>{
             const selectSalesCategory = data.get('selectSalesCategory');
             const selectSalesCurrency = data.get('selectSalesCurrency');
             const minimumBidAmount = data.get('minimumBidAmount');
-            const BiddingDeadline = data.get('BiddingDeadline');
+            const BiddingDeadline = new Date(data.get('BiddingDeadline')).toUTCString();
             const socialCauseSales = data.get('socialCauseSales').split(' | ')[1];
             if(files.length){
                 addDoc(dealsRef, {
@@ -231,7 +231,7 @@ const SearchBarWidget = (props)=>{
             const activityCategory = data.get('activityCategory');
             const activityCurrency = data.get('activityCurrency');
             const activityRequiredAmount = data.get('activityRequiredAmount');
-            const activityDueDate = data.get('activityDueDate');
+            const activityDueDate = new Date(data.get('activityDueDate')).toUTCString();
             if(files.length){
                 addDoc(activityRef, {
                     poster: uid,
@@ -559,28 +559,28 @@ const SearchBarWidget = (props)=>{
                     </Select>
                 </FormControl><br/><br/>
                 <div style={{display:"flex",flexDirection:"row", justifyContent:"space-between"}}>
-                    <FormControl style={{width:'40%'}}>
-                        <InputLabel id="deal-currency-select-label">Select Currency</InputLabel>
-                        <Select
-                            labelId='deal-currency-select-label'
-                            label='Select Currency'
-                            onChange={handleSalesCurrencyChange}
-                            value={saleCurrency}
-                            name='activityCurrency'
-                        >
-                            {currencyList.map((category)=>{
-                                return (<MenuItem value={category} key={category}>
-                                    <Typography>{category}</Typography>
-                                </MenuItem>)
-                            })
-                            }
-                        </Select>
-                    </FormControl>
-                    <TextField 
-                        placeholder='Required Amount' 
-                        name='activityRequiredAmount'
-                        type={'number'}
-                        style={{width:'auto'}}/>
+                <FormControl style={{width:'40%'}}>
+                    <InputLabel id="deal-currency-select-label">Select Currency</InputLabel>
+                    <Select
+                        labelId='deal-currency-select-label'
+                        label='Select Currency'
+                        onChange={handleSalesCurrencyChange}
+                        value={saleCurrency}
+                        name='activityCurrency'
+                    >
+                        {currencyList.map((category)=>{
+                            return (<MenuItem value={category} key={category}>
+                                <Typography>{category}</Typography>
+                            </MenuItem>)
+                        })
+                        }
+                    </Select>
+                </FormControl>
+                <TextField 
+                    placeholder='Required Amount' 
+                    name='activityRequiredAmount'
+                    type={'number'}
+                    style={{width:'auto'}}/>
                 </div>
                 <br/>
                 <br/>

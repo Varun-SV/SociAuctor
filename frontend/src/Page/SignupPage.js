@@ -19,11 +19,13 @@ import { createWallet } from '../utils/Rapyd';
 import { Autocomplete } from '@mui/material';
 import countryList from 'react-select-country-list';
 import { useMemo } from 'react';
+import Modal from '@mui/material/Modal';
 
 export default function SignupPage() {
   const [messageOpen, setmessageOpen] = React.useState(false);
   const [message, setMessage] = React.useState("");
-  const countryOptions = useMemo(() => countryList().getData(), [])
+  const countryOptions = useMemo(() => countryList().getData(), []);
+  const [loading, setLoading] = React.useState(false);
     const theme = createTheme({
         palette: {
             primary: {
@@ -63,6 +65,7 @@ export default function SignupPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setLoading(true);
     const data = new FormData(event.currentTarget);
     const email = data.get('email');
     const password = data.get('password');
@@ -85,6 +88,7 @@ export default function SignupPage() {
             country: country,
             wallet_id: wallet.data.id
           }).then(()=>{
+              setLoading(false);
               history.push('/');
           })
         })
@@ -192,6 +196,11 @@ export default function SignupPage() {
             </Grid>
           </Box>
         </Box>
+        {loading ? (
+                <Modal open={loading} className="loader-container">
+                <div className="spinner"></div>
+                </Modal>
+            ) : <div></div>}
       </Container>
     </ThemeProvider>
   );

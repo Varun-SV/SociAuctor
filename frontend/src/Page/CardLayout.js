@@ -34,6 +34,30 @@ const CardLayout = (list) => {
     const firebaseAuth = getAuth(app);
     const history = useHistory();
     list= list.item;
+    const [days,setDays] = React.useState(0);
+    const [hours,setHours] = React.useState(0);
+    const [minutes,setMinutes] = React.useState(0);
+    const [seconds,setSeconds] = React.useState(0);
+
+    useEffect(()=>{
+        if(donate && list[8]==="Bid"){
+            var diff = new Date(list[11])-new Date();
+
+            var seconds_ = Math.floor(diff / 1000),
+                minutes_ = Math.floor(seconds_ / 60),
+                hours_   = Math.floor(minutes_ / 60),
+                days_    = Math.floor(hours_ / 24);
+
+                seconds_ %= 60;
+                minutes_ %= 60;
+                hours_ %= 24;
+                days_ %= 30;
+            setDays(days_);
+            setHours(hours_);
+            setMinutes(minutes_);
+            setSeconds(seconds_);
+        }
+    })
     
     onAuthStateChanged(firebaseAuth, async(user) => {
         if (user) {
@@ -233,16 +257,123 @@ const CardLayout = (list) => {
                     :
                     <Box sx={style}>
                     <h3 className="cardTitle">{list[0]}</h3>
-                    <Typography
-                        style={{
-                            fontSize: 14,
-                            fontWeight: 'bold',
-                            fontFamily: 'Roboto',
-                        }}
-                        color="textSecondary"
-                    >
-                        {"ID : "+list[6]}
-                    </Typography>
+                    <div style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}} >
+                        <div style={{flexDirection:"column"}}>
+                            <Typography
+                                style={{
+                                    fontSize: 14,
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Roboto',
+                                }}
+                                color="textSecondary"
+                            >
+                                {"ID : "+list[6]}
+                            </Typography>
+                            <Typography
+                                style={{
+                                    fontSize: 14,
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Roboto',
+                                }}
+                                color="textSecondary"
+                            >
+                                {"Minimum Bid Amount : "+list[2]+" "+list[3]}
+                            </Typography>
+                        </div>
+                        <div style={{display:"flex",alignContents:"flex-end",flexDirection:"row", justifyContent:"space-between", gap:"1.5%",verticalAlign:"middle"}}>
+                            <div style={{display:"flex",flexDirection:"column",justifyContent:"center", alignItems:"center"}}>
+                            <Typography
+                                style={{
+                                    fontSize: 14,
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Roboto',
+                                }}
+                                color="textSecondary"
+                            >
+                                Days
+                            </Typography>
+                            <Typography
+                                style={{
+                                    fontSize: 14,
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Roboto',
+                                }}
+                                color="textSecondary"
+                            >
+                                {days}
+                            </Typography>
+                            </div>
+                            : 
+                            <div style={{flexDirection:"row",justifyContent:"center"}}>
+                            <Typography
+                                style={{
+                                    fontSize: 14,
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Roboto',
+                                }}
+                                color="textSecondary"
+                            >
+                                HH
+                            </Typography>
+                            <Typography
+                                style={{
+                                    fontSize: 14,
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Roboto',
+                                }}
+                                color="textSecondary"
+                            >
+                                {hours}
+                            </Typography>
+                            </div>
+                            : 
+                            <div style={{flexDirection:"row",justifyContent:"center"}}>
+                            <Typography
+                                style={{
+                                    fontSize: 14,
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Roboto',
+                                }}
+                                color="textSecondary"
+                            >
+                                MM
+                            </Typography>
+                            <Typography
+                                style={{
+                                    fontSize: 14,
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Roboto',
+                                }}
+                                color="textSecondary"
+                            >
+                                {minutes}
+                            </Typography>
+                            </div>
+                            : 
+                            <div style={{flexDirection:"row",justifyContent:"center"}}>
+                            <Typography
+                                style={{
+                                    fontSize: 14,
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Roboto',
+                                }}
+                                color="textSecondary"
+                            >
+                                SS
+                            </Typography>
+                            <Typography
+                                style={{
+                                    fontSize: 14,
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Roboto',
+                                }}
+                                color="textSecondary"
+                            >
+                                {seconds}
+                            </Typography>
+                            </div>
+                        </div>
+                    </div>
                     <br/>
                     <form onSubmit={handleDonate}>
                     <div style={{display:"flex",flexDirection:"row", justifyContent:"space-evenly"}}>
