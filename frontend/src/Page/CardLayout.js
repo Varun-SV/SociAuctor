@@ -1,4 +1,4 @@
-import { Card, CardContent, Typography, Button } from "@mui/material";
+import { Card, CardContent, Typography, Button, FormControl, Select, InputLabel, TextField } from "@mui/material";
 import './styles/FundingDashboard.css';
 import React, { useEffect, useState } from "react";
 import './styles/FundingDashboard.css';
@@ -9,11 +9,47 @@ import { Carousel } from 'react-responsive-carousel';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import MenuItem from '@mui/material/MenuItem';
+import currencyJson from '../assets/Common-Currency.json';
+import createPayment from "../utils/Rapyd";
 
 const CardLayout = (list) => {
 
-    const [isOpen,setIsOpen] = useState(false);
+    const [isOpenDesc,setIsOpenDesc] = useState(false);
+    const [donate,setDonate] = useState(false);
+    const [messageOpen, setmessageOpen] = React.useState(false);    
+    const currencyList = Object.keys(currencyJson);    
+    const [saleCurrency, setSaleCurrency] = React.useState(currencyList[0]);
     list= list.item;
+
+
+    const Alert = React.forwardRef(function Alert(props, ref) {
+        return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+      });
+
+    const handleSalesCurrencyChange = (event) => {
+        setSaleCurrency(event.target.value);
+    }
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setmessageOpen(false);
+    };
+
+    const handleDonate = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const selectSalesCurrency = data.get('selectSalesCurrency');
+        const donationAmount = data.get("donationAmound");
+        console.log(donationAmount);
+        createPayment(donationAmount, 'US', selectSalesCurrency, list[3]).then((res)=>{
+            window.location.href = res.redirect_url;
+          }) 
+    }
 
     function Card_pop(){
         return(
@@ -30,14 +66,10 @@ const CardLayout = (list) => {
         }
     console.log(list);
     return (
-        <div style={{
-            display: 'flex',
-            flexDirection: 'coloumn'
-        }}
-        >
+        <div>
             <Card className="cards"
                     id="cards"
-                    onClick={()=>{setIsOpen(!isOpen)}}
+                    onClick={()=>{setIsOpenDesc(!isOpenDesc);}}
                     style={{
                         width: "45%",
                         borderRadius: 10,
@@ -46,88 +78,67 @@ const CardLayout = (list) => {
                     }}
                 >
                     <CardContent>
-                        <div 
-                            style={{
-                                display: 'fixed',
-                                flexDirection: 'column',
-                            }}
-                        >
+                    <div>
                             <Typography
-                                style={{
-                                    align: "center",
-                                    fontWeight: "bold",
-                                    fontSize: 20,
-                                }}
-                            >
-                                {list[0]}
+                                    style={{
+                                        align: "center",
+                                        fontWeight: "bold",
+                                        fontSize: 20,
+                                    }}
+                                >
+                                    {list[0]}
                             </Typography>
-                        </div>
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'space-between',
-                        }}
-                        >
-                            <Typography
-                                style={{
-                                    fontSize: 14,
-                                    fontWeight: 'bold',
-                                    fontFamily: 'Roboto',
-                                }}
-                                color="textSecondary"
-                            >
-                                    {list[1]}
-                            </Typography>
-                            <Typography
-                                style={{
-                                    fontSize: 14,
-                                    fontWeight: 'bold',
-                                    fontFamily: 'Roboto',
-                                }}
-                                color="textSecondary"
-                            >
-                                {"ID : "+list[6]+")"} 
-                                <ContentCopyIcon style={{marginTop:'10px',color:"grey"}} onClick={() =>  navigator.clipboard.writeText(list[6])} />
-                            </Typography>
-                            <Typography
-                                style={{
-                                    fontSize: 14,
-                                    textAlign:"right,"
-                                }}
-                                color="textSecondary"
-                            >
-                                {list[7]}
-                            </Typography>
-                        </div>
-                        <div
-                            style={{
-                                textAlign: "right",
-                            }}
-                        >
-                            <Typography
-                                style={{
-                                    fontSize: 14,
-
-                                }}
-                                color="textSecondary"
-
-                            >
-                                {list[2] + " " + list[3]}
-                            </Typography>
-                        </div>
-                        <div
-                            style={{
-                                textAlign: "right",
-                            }}
-                        >
-                            <Button style={{backgroundColor: '#142e36', color: 'white'}}> {list[8]} </Button>
+                            <div style={{display:"flex",flexDirection:"row", justifyContent:"space-between"}}>
+                                <div style={{flexDirection:"column"}}>
+                                    <Typography
+                                        style={{
+                                            fontSize: 14,
+                                            fontWeight: 'bold',
+                                            fontFamily: 'Roboto',
+                                        }}
+                                        color="textSecondary"
+                                    >
+                                            {list[1]}
+                                    </Typography>
+                                    <Typography
+                                        style={{
+                                            fontSize: 14,
+                                            fontWeight: 'bold',
+                                            fontFamily: 'Roboto',
+                                        }}
+                                        color="textSecondary"
+                                    >
+                                        {"ID : "+list[6]} 
+                                        <ContentCopyIcon style={{color:"grey", marginLeft:"3px", verticalAlign:"middle"}} onClick={(e) =>  {e.stopPropagation();navigator.clipboard.writeText(list[6]);setmessageOpen(true);}} />
+                                    </Typography>
+                                </div>
+                                <div style={{flexDirection:"row"}}>
+                                    <Typography
+                                        style={{
+                                            fontSize: 14,
+                                            textAlign:"right,"
+                                        }}
+                                        color="textSecondary"
+                                    >
+                                        {list[7]}
+                                    </Typography>
+                                    <Typography
+                                        style={{
+                                            fontSize: 14,
+                                        }}
+                                        color="textSecondary"
+                                    >
+                                        {list[2] + " " + list[3]}
+                                    </Typography>                                    
+                                    <Button style={{backgroundColor: '#142e36', color: 'white'}} onClick={(e)=>{e.stopPropagation();setDonate(true);}}> {list[8]} </Button>
+                                </div>
+                            </div>
                         </div>
                     </CardContent>
             </Card>
-            <div>
             <Modal
-                open={isOpen}
-                onClose={()=>{setIsOpen(false)}}
+                open={isOpenDesc}
+                onClose={()=>{setIsOpenDesc(false)}}
                 style={{ marginTop: '8%', marginBottom: '20%', height: '65%', width: '100%'}}
                 >
                     <Box sx={style}>
@@ -169,7 +180,50 @@ const CardLayout = (list) => {
                 Hello {list[0]}
             </div> */}
         </Modal>
-        </div>
+        <Modal
+                open={donate}
+                onClose={()=>{setDonate(false)}}
+                style={{ marginTop: '8%', marginBottom: '20%', height: '65%', width: '100%'}}
+                >
+                    <Box sx={style}>
+                    <h1 className="cardTitle">Donate</h1>
+                    <br/>
+                    <form onSubmit={handleDonate}>
+                    <div style={{display:"flex",flexDirection:"row", justifyContent:"space-evenly"}}>
+                        <FormControl style={{width:'40%'}}>
+                            <InputLabel id="deal-currency-select-label">Select Currency</InputLabel>
+                            <Select
+                                labelId='deal-currency-select-label'
+                                label='Select Currency'
+                                onChange={handleSalesCurrencyChange}
+                                value={saleCurrency}
+                                name='selectSalesCurrency'
+                            >
+                                {currencyList.map((category)=>{
+                                    return (<MenuItem value={category} key={category}>
+                                        <Typography>{category}</Typography>
+                                    </MenuItem>)
+                                })
+                                }
+                            </Select>
+                        </FormControl>
+                        <TextField 
+                            placeholder='Donation Amount' 
+                            name='donationAmound'
+                            type={'number'}
+                            style={{width:'auto'}}/>
+                    </div>
+                    <br/>
+                    <br/>
+                    <Button type="submit" style={{width: '100%', background: '#142e36', color: 'white', fontSize: '100%'}}>Donate</Button>
+                    </form>
+                    </Box>
+        </Modal>
+        <Snackbar open={messageOpen} autoHideDuration={6000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
+                      Copied to clipboard
+                    </Alert>
+        </Snackbar>
     </div>
     );
 }

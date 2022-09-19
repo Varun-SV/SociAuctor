@@ -124,7 +124,9 @@ function FundingDashboard() {
     }
 
     return (
-        <div className="data" style={{backgroundColor: 'transparent'}}>
+        <div className="data" style={{backgroundColor: 'transparent',  backgroundImage: "url('../../assets/bg1.jpg')",
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat'}}>
             <AppBarWidget />
             <SearchBarWidget additionTitle="Add Activity" />
             <br/>

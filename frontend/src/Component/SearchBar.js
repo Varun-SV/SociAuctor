@@ -479,28 +479,30 @@ const SearchBarWidget = (props)=>{
                         }
                     </Select>
                 </FormControl><br/><br/>
-                <FormControl style={{width:'40%'}}>
-                    <InputLabel id="deal-currency-select-label">Select Currency</InputLabel>
-                    <Select
-                        labelId='deal-currency-select-label'
-                        label='Select Currency'
-                        onChange={handleSalesCurrencyChange}
-                        value={saleCurrency}
-                        name='selectSalesCurrency'
-                    >
-                        {currencyList.map((category)=>{
-                            return (<MenuItem value={category} key={category}>
-                                <Typography>{category}</Typography>
-                            </MenuItem>)
-                        })
-                        }
-                    </Select>
-                </FormControl>
-                <TextField 
-                    placeholder='Minimum bid amount' 
-                    name='minimumBidAmount'
-                    type={'number'}
-                    style={{width:'auto'}}/>
+                <div style={{display:"flex",flexDirection:"row", justifyContent:"space-between"}}>
+                    <FormControl style={{width:'40%'}}>
+                        <InputLabel id="deal-currency-select-label">Select Currency</InputLabel>
+                        <Select
+                            labelId='deal-currency-select-label'
+                            label='Select Currency'
+                            onChange={handleSalesCurrencyChange}
+                            value={saleCurrency}
+                            name='selectSalesCurrency'
+                        >
+                            {currencyList.map((category)=>{
+                                return (<MenuItem value={category} key={category}>
+                                    <Typography>{category}</Typography>
+                                </MenuItem>)
+                            })
+                            }
+                        </Select>
+                    </FormControl>
+                    <TextField 
+                        placeholder='Minimum bid amount' 
+                        name='minimumBidAmount'
+                        type={'number'}
+                        style={{width:'auto'}}/>
+                </div>
                 <br/>
                 <br/>
                 <Typography>Select bid challenge duration</Typography><br/>
@@ -556,28 +558,30 @@ const SearchBarWidget = (props)=>{
                         }
                     </Select>
                 </FormControl><br/><br/>
-                <FormControl style={{width:'40%'}}>
-                    <InputLabel id="deal-currency-select-label">Select Currency</InputLabel>
-                    <Select
-                        labelId='deal-currency-select-label'
-                        label='Select Currency'
-                        onChange={handleSalesCurrencyChange}
-                        value={saleCurrency}
-                        name='activityCurrency'
-                    >
-                        {currencyList.map((category)=>{
-                            return (<MenuItem value={category} key={category}>
-                                <Typography>{category}</Typography>
-                            </MenuItem>)
-                        })
-                        }
-                    </Select>
-                </FormControl>
-                <TextField 
-                    placeholder='Required Amount' 
-                    name='activityRequiredAmount'
-                    type={'number'}
-                    style={{width:'auto'}}/>
+                <div style={{display:"flex",flexDirection:"row", justifyContent:"space-between"}}>
+                    <FormControl style={{width:'40%'}}>
+                        <InputLabel id="deal-currency-select-label">Select Currency</InputLabel>
+                        <Select
+                            labelId='deal-currency-select-label'
+                            label='Select Currency'
+                            onChange={handleSalesCurrencyChange}
+                            value={saleCurrency}
+                            name='activityCurrency'
+                        >
+                            {currencyList.map((category)=>{
+                                return (<MenuItem value={category} key={category}>
+                                    <Typography>{category}</Typography>
+                                </MenuItem>)
+                            })
+                            }
+                        </Select>
+                    </FormControl>
+                    <TextField 
+                        placeholder='Required Amount' 
+                        name='activityRequiredAmount'
+                        type={'number'}
+                        style={{width:'auto'}}/>
+                </div>
                 <br/>
                 <br/>
                 <Typography>Upload the proof</Typography><br/>
