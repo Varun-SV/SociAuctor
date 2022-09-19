@@ -47,7 +47,7 @@ async function createWallet(firstName, lastName, email, type, uid){
     return resultJSON;
 }
 
-async function sendMoney(amount, currency, sourceWallet, destinationWallet){
+async function sendMoney(amount, currency, sourceWallet, destinationWallet, srcCurrency){
   const result = 
   await fetch('http://localhost:3001/sendMoney', {
     method: 'POST',
@@ -60,7 +60,8 @@ async function sendMoney(amount, currency, sourceWallet, destinationWallet){
         source_ewallet: sourceWallet,
         destination_ewallet: destinationWallet,
         amount: amount,
-        currency: currency
+        currency: currency,
+        src_currency: srcCurrency
       }
     )
   })

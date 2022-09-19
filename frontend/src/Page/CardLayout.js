@@ -17,7 +17,7 @@ import { createPayment, sendMoney } from "../utils/Rapyd";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from "../firebase";
 import { useHistory } from "react-router-dom";
-import { collection, doc, getDoc, getFirestore, setDoc } from "@firebase/firestore";
+import { addDoc, collection, doc, getDoc, getFirestore, setDoc } from "@firebase/firestore";
 
 const CardLayout = (list) => {
 
@@ -70,7 +70,7 @@ const CardLayout = (list) => {
         getDoc(doc(activityRef, list[6])).then((snapshot)=>{
             existingActDoc = snapshot.data();
         })
-        sendMoney(donationAmount,selectSalesCurrency, userWalletId ,list[9]).then((res)=>{
+        sendMoney(donationAmount,selectSalesCurrency, userWalletId ,list[9], list[3]).then((res)=>{
             if(res.status.status === 'SUCCESS'){
                 existingActDoc['required_amount'] -= res.data.amount;
                 setDoc(doc(activityRef, list[6]), existingActDoc).then(()=>{
