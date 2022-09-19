@@ -1,4 +1,4 @@
-import { Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, Typography, Button } from "@mui/material";
 import './styles/FundingDashboard.css';
 import React, { useEffect, useState } from "react";
 import './styles/FundingDashboard.css';
@@ -120,26 +120,7 @@ const CardLayout = (list) => {
                                 textAlign: "right",
                             }}
                         >
-                            <Popup trigger={<button> {list[8]} </button>}
-                                position="center">
-                                <div
-                                    style={{
-                                        disply: "inline-block",
-                                        // width: "100%",
-                                        top: "25%",
-                                        left: "25%",
-                                        position: "absolute",
-                                        backgroundColor: "white",
-                                        border: "2px solid #000",
-                                        boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)",
-                                        padding: "50px",
-                                        borderRadius: "10px",
-                                        overflow:'scroll'
-                                    }}
-                                >
-                                    Here is put some donation
-                                </div>
-                            </Popup>
+                            <Button style={{backgroundColor: '#142e36', color: 'white'}}> {list[8]} </Button>
                         </div>
                     </CardContent>
             </Card>
