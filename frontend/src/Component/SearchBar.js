@@ -14,7 +14,7 @@ import { FileUploader } from "react-drag-drop-files";
 import currencyJson from '../assets/Common-Currency.json';
 import DurationPicker from 'react-duration-picker';
 import { getStorage, ref, uploadBytes } from "firebase/storage";
-import {getFirestore } from "@firebase/firestore";
+import { getFirestore } from "@firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useHistory } from 'react-router-dom';
 import {addDoc, collection, getDocs,doc, updateDoc } from "@firebase/firestore";
