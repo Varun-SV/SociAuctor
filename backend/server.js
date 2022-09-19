@@ -42,7 +42,15 @@ app.post("/createWallet", async (req, res) => {
     const result = await makeRequest('POST', '/v1/user', data);
     return res.json(result.body)
   
-  })
+})
+
+app.post("/sendMoney", async (req, res) => {
+  const data = req.body;
+
+  const result = await makeRequest('POST', '/v1/account/transfer', data);
+  return res.json(result.body)
+
+})
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
