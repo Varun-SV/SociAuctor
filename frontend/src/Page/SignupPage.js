@@ -15,6 +15,7 @@ import {getFirestore } from "@firebase/firestore";
 import {addDoc, collection, getDocs,doc, updateDoc } from "@firebase/firestore";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { createWallet } from '../utils/Rapyd';
 
 export default function SignupPage() {
   const [messageOpen, setmessageOpen] = React.useState(false);
@@ -69,13 +70,16 @@ export default function SignupPage() {
         const uid = user.uid;
         setMessage("Signup successful");
         setmessageOpen(true);
-        addDoc(ref, {
+        createWallet(firstName, lastName, email, 'person', uid).then((wallet)=>{
+          addDoc(ref, {
             firstName: firstName,
             lastName: lastName, 
             email: email,
-            userId: uid
-        }).then(()=>{
-            history.push('/');
+            userId: uid,
+            wallet_id: wallet.data.id
+          }).then(()=>{
+              history.push('/');
+          })
         })
       })
       .catch((error) => {

@@ -19,7 +19,6 @@ app.get("/api", (req, res) => {
 });
 
 app.post("/checkout", async (req, res) => {
-console.log('Checkout instantiated');
   const amount = req.body.amount
   const currency = req.body.currency
   const requestedCurrency = req.body.requested_currency
@@ -36,6 +35,14 @@ console.log('Checkout instantiated');
   return res.json({'redirect_url': result.body.data.redirect_url})
 
 })
+
+app.post("/createWallet", async (req, res) => {
+    const data = req.body;
+  
+    const result = await makeRequest('POST', '/v1/user', data);
+    return res.json(result.body)
+  
+  })
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
