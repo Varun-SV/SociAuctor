@@ -17,6 +17,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from "../firebase";
 import { useHistory } from "react-router-dom";
 import { addDoc, collection, doc, getDoc, getFirestore, setDoc } from "@firebase/firestore";
+import { useTimer } from 'react-timer-hook';
 
 const CardLayout = (list) => {
 
@@ -34,16 +35,19 @@ const CardLayout = (list) => {
     const firebaseAuth = getAuth(app);
     const history = useHistory();
     list= list.item;
+    const [diff,setdiff] = React.useState(0)
     const [days,setDays] = React.useState(0);
     const [hours,setHours] = React.useState(0);
     const [minutes,setMinutes] = React.useState(0);
     const [seconds,setSeconds] = React.useState(0);
+    var auctionRef = null;
 
     useEffect(()=>{
         if(donate && list[8]==="Bid"){
-            var diff = new Date(list[11])-new Date();
+            var diff_ = new Date(list[11])-new Date();
+            setdiff(diff_);
 
-            var seconds_ = Math.floor(diff / 1000),
+            var seconds_ = Math.floor(diff_ / 1000),
                 minutes_ = Math.floor(seconds_ / 60),
                 hours_   = Math.floor(minutes_ / 60),
                 days_    = Math.floor(hours_ / 24);
@@ -58,10 +62,46 @@ const CardLayout = (list) => {
             setSeconds(seconds_);
         }
     })
+
+    function MyTimer({ expiryTimestamp }) {
+        const {
+          seconds,
+          minutes,
+          hours,
+          days,
+          isRunning,
+          start,
+          pause,
+          resume,
+          restart,
+        } = useTimer({ expiryTimestamp, onExpire: () => console.warn('onExpire called') });
+
+        return (
+            <div style={{textAlign: 'center'}}>
+            <h1>react-timer-hook </h1>
+            <p>Timer Demo</p>
+            <div style={{fontSize: '100px'}}>
+                <span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:<span>{seconds}</span>
+            </div>
+            <p>{isRunning ? 'Running' : 'Not running'}</p>
+            <button onClick={start}>Start</button>
+            <button onClick={pause}>Pause</button>
+            <button onClick={resume}>Resume</button>
+            <button onClick={() => {
+                // Restarts to 5 minutes timer
+                const time = new Date();
+                time.setSeconds(time.getSeconds() + 300);
+                restart(time)
+            }}>Restart</button>
+            </div>
+        );
+
+    }
     
     onAuthStateChanged(firebaseAuth, async(user) => {
         if (user) {
           firestore = getFirestore(app);
+          auctionRef = collection(firestore, 'auctions/')
           transactionsRef = collection(firestore, 'users/' + firebaseAuth.currentUser.uid + '/transactions/');
           activityRef = collection(firestore, 'activities/');
         } else {
@@ -84,12 +124,37 @@ const CardLayout = (list) => {
         setmessageOpen(false);
     };
 
+    const handleBid = (event) => {
+        event.preventDefault();
+        setLoading(true);
+        try{
+            const data = new FormData(event.currentTarget);
+            const selectSalesCurrency = data.get('selectSalesCurrency');
+            const bidAmount = data.get("bidAmount");
+            console.log(list);
+            addDoc(auctionRef, {
+                activityID: list[6],
+                bidder: uid,
+                bid_amount:bidAmount,
+                bid_currency:selectSalesCurrency
+            }).then(()=>{
+                        setLoading(false);
+                        history.push('/');
+                    }
+                )
+
+        }
+        catch(err){
+            setLoading(false);
+        }
+    }
+
     const handleDonate = (event) => {
         event.preventDefault();
         setLoading(true);
         const data = new FormData(event.currentTarget);
         const selectSalesCurrency = data.get('selectSalesCurrency');
-        const donationAmount = data.get("donationAmound");
+        const donationAmount = data.get("donationAmount");
         console.log(list);
         var existingActDoc = null;
         getDoc(doc(activityRef, list[6])).then((snapshot)=>{
@@ -245,7 +310,7 @@ const CardLayout = (list) => {
                         </FormControl>
                         <TextField 
                             placeholder='Donation Amount' 
-                            name='donationAmound'
+                            name='donationAmount'
                             type={'number'}
                             style={{width:'auto'}}/>
                     </div>
@@ -375,7 +440,7 @@ const CardLayout = (list) => {
                         </div>
                     </div>
                     <br/>
-                    <form onSubmit={handleDonate}>
+                    <form onSubmit={handleBid}>
                     <div style={{display:"flex",flexDirection:"row", justifyContent:"space-evenly"}}>
                         <FormControl style={{width:'40%'}}>
                             <InputLabel id="deal-currency-select-label">Select Currency</InputLabel>
@@ -396,13 +461,13 @@ const CardLayout = (list) => {
                         </FormControl>
                         <TextField 
                             placeholder='Bid Amount' 
-                            name='bidAmound'
+                            name='bidAmount'
                             type={'number'}
                             style={{width:'auto'}}/>
                     </div>
                     <br/>
                     <br/>
-                    <Button type="submit" style={{width: '100%', background: '#142e36', color: 'white', fontSize: '100%'}}>Donate</Button>
+                    <Button type="submit" style={{width: '100%', background: '#142e36', color: 'white', fontSize: '100%'}}>Place Bid</Button>
                     </form>                    
                     </Box>
                     }
