@@ -84,10 +84,12 @@ const SearchBarWidget = (props)=>{
     const [files, setFiles] = React.useState([]);
     const [rawFiles, setRawFiles] = React.useState([]);
     const saleCategories = ['Antiques', 'Handicraft', 'Paintings', 'Statues', 'Collectible'];
+    const treatmentCategories = ['Heart', 'Brain', 'Trauma', 'Kidney', 'Gastroental', 'ENT', 'Fracture', 'Pregnancy', 'Cancer', 'Tumor'];
     const [saleCategory, setSaleCategory] = React.useState("");
     const currencyList = Object.keys(currencyJson);
     const [saleCurrency, setSaleCurrency] = React.useState(currencyList[0]);
     const [loading, setLoading] = React.useState(false);
+    const [activitiesDict, setActivitiesDict] = React.useState([]);
     var storage = null;
     
     const auth = getAuth(app);
@@ -107,11 +109,33 @@ const SearchBarWidget = (props)=>{
         dealsRef = collection(firestore, 'deals/');
         activityRef = collection(firestore, 'activities/');
         storage = getStorage(app);
+        if(!activitiesDict.length){
+            fetchData();
+        }
       } else {
         history.push('login/');
       }
     });
     
+    const fetchData = async() => {
+        var activitiesIdArray = [];
+        var activitiesTitleArray = [];
+        var res = [];
+        var querySnapshot = await getDocs(activityRef);
+        querySnapshot.docs.forEach((doc)=>{
+          var tmp = doc.data();
+          activitiesIdArray.push(doc.id);
+          activitiesTitleArray.push(tmp.activity_name + ' | ' + doc.id);
+        });
+        activitiesTitleArray.map((v, idx)=>{
+            var tmp = {
+                label: v,
+                value: activitiesIdArray[idx]
+            }
+            res.push(tmp);
+        });
+        setActivitiesDict(res);
+    }
     const handleOpenSale = () => setOpenSale(true);
     const handleOpenAct = () => setOpenAct(true);
     const handleCloseSale = () => {
@@ -495,7 +519,7 @@ const SearchBarWidget = (props)=>{
                 <Autocomplete
                     disablePortal
                     id="combo-box-demo"
-                    options={['Heart Operation', 'Kidney Surgery']}
+                    options={activitiesDict}
                     sx={{ width: '100%', marginTop: '1%' }}
                     renderInput={(params) => <TextField {...params} label="Funding Activity" name='socialCauseSales' />}
                 /><br/><br/>
@@ -523,7 +547,7 @@ const SearchBarWidget = (props)=>{
                         value={saleCategory}
                         name='activityCategory'
                     >
-                        {saleCategories.map((category)=>{
+                        {treatmentCategories.map((category)=>{
                             return (<MenuItem value={category} key={category}>
                                 <Typography>{category}</Typography>
                             </MenuItem>)
