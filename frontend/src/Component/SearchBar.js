@@ -193,7 +193,7 @@ const SearchBarWidget = (props)=>{
             const selectSalesCurrency = data.get('selectSalesCurrency');
             const minimumBidAmount = data.get('minimumBidAmount');
             const BiddingDeadline = data.get('BiddingDeadline');
-            const socialCauseSales = data.get('socialCauseSales');
+            const socialCauseSales = data.get('socialCauseSales').split(' | ')[1];
             const salesBidDuration = data.get('salesBidDuration');
             if(files.length){
                 addDoc(dealsRef, {
