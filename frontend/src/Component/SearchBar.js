@@ -164,6 +164,7 @@ const SearchBarWidget = (props)=>{
         try{
             const data = new FormData(event.currentTarget);
             const saleItemName = data.get('saleItemName');
+            const saleItemDesc = data.get('saleItemDesc');
             const selectSalesCategory = data.get('selectSalesCategory');
             const selectSalesCurrency = data.get('selectSalesCurrency');
             const minimumBidAmount = data.get('minimumBidAmount');
@@ -174,6 +175,7 @@ const SearchBarWidget = (props)=>{
                 addDoc(dealsRef, {
                     artist: uid,
                     item_name: saleItemName,
+                    description: saleItemDesc,
                     category: selectSalesCategory, 
                     currency: selectSalesCurrency,
                     minimum_bid: minimumBidAmount,
@@ -201,6 +203,7 @@ const SearchBarWidget = (props)=>{
         try{
             const data = new FormData(event.currentTarget);
             const activityName = data.get('activityName');
+            const activityDescription = data.get('activityDesc');
             const activityCategory = data.get('activityCategory');
             const activityCurrency = data.get('activityCurrency');
             const activityRequiredAmount = data.get('activityRequiredAmount');
@@ -209,6 +212,7 @@ const SearchBarWidget = (props)=>{
                 addDoc(activityRef, {
                     poster: uid,
                     activity_name: activityName,
+                    description: activityDescription,
                     category: activityCategory,
                     currency: activityCurrency,
                     required_amount: activityRequiredAmount,
@@ -428,6 +432,12 @@ const SearchBarWidget = (props)=>{
                     placeholder="Item Name"
                     style={{width: '100%', marginTop: '3%'}}
                 /><br/><br/>
+                <TextField
+                    name = "saleItemDesc"
+                    placeholder="Item Description"
+                    style={{width: '100%', marginTop: '3%'}}
+                    multiline
+                /><br/><br/>
                 <FormControl style={{width: '100%'}}>
                     <InputLabel id="deal-category-select-label">Select Category</InputLabel>
                     <Select
@@ -497,6 +507,12 @@ const SearchBarWidget = (props)=>{
                     name = "activityName"
                     placeholder="Title"
                     style={{width: '100%'}}
+                /><br/><br/>
+                <TextField
+                    name = "activityDesc"
+                    placeholder="Activity Description"
+                    style={{width: '100%', marginTop: '3%'}}
+                    multiline
                 /><br/><br/>
                 <FormControl style={{width: '100%'}}>
                     <InputLabel id="deal-category-select-label">Select Category</InputLabel>
