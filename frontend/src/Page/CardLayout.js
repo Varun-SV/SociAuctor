@@ -13,7 +13,11 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import MenuItem from '@mui/material/MenuItem';
 import currencyJson from '../assets/Common-Currency.json';
-import { createPayment } from "../utils/Rapyd";
+import { createPayment, sendMoney } from "../utils/Rapyd";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { app } from "../firebase";
+import { useHistory } from "react-router-dom";
+import { collection, doc, getDoc, getFirestore, setDoc } from "@firebase/firestore";
 
 const CardLayout = (list) => {
 
@@ -22,8 +26,24 @@ const CardLayout = (list) => {
     const [messageOpen, setmessageOpen] = React.useState(false);    
     const currencyList = Object.keys(currencyJson);    
     const [saleCurrency, setSaleCurrency] = React.useState(currencyList[0]);
+    const userWalletId = list.wallet_id;
+    const uid = list.uid;
+    var firestore = null;
+    var transactionsRef = null;
+    var activityRef = null;
+    const firebaseAuth = getAuth(app);
+    const history = useHistory();
     list= list.item;
-
+    
+    onAuthStateChanged(firebaseAuth, async(user) => {
+        if (user) {
+          firestore = getFirestore(app);
+          transactionsRef = collection(firestore, 'users/' + firebaseAuth.currentUser.uid + '/transactions/');
+          activityRef = collection(firestore, 'activities/');
+        } else {
+          history.push('/login');
+        }
+    });
 
     const Alert = React.forwardRef(function Alert(props, ref) {
         return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -46,8 +66,19 @@ const CardLayout = (list) => {
         const selectSalesCurrency = data.get('selectSalesCurrency');
         const donationAmount = data.get("donationAmound");
         console.log(list);
-        createPayment(donationAmount, list[9], selectSalesCurrency, list[3]).then((res)=>{
-            window.location.href = res.redirect_url;
+        var existingActDoc = null;
+        getDoc(doc(activityRef, list[6])).then((snapshot)=>{
+            existingActDoc = snapshot.data();
+        })
+        sendMoney(donationAmount,selectSalesCurrency, userWalletId ,list[9]).then((res)=>{
+            if(res.status.status === 'SUCCESS'){
+                existingActDoc['required_amount'] -= res.data.amount;
+                setDoc(doc(activityRef, list[6]), existingActDoc).then(()=>{
+                    history.push('/');
+                })
+            }
+          }).catch((e)=>{
+            return;
           }) 
     }
 
@@ -186,9 +217,9 @@ const CardLayout = (list) => {
                 style={{ marginTop: '8%', marginBottom: '20%', height: '65%', width: '100%'}}
                 >
                     <Box sx={style}>
-                    <h1 className="cardTitle">list[8]</h1>
+                    <h1 className="cardTitle">{list[8]}</h1>
                     <br/>
-                    {list[8]==="donate"?
+                    {list[8]==="Donate"?
                     <form onSubmit={handleDonate}>
                     <div style={{display:"flex",flexDirection:"row", justifyContent:"space-evenly"}}>
                         <FormControl style={{width:'40%'}}>

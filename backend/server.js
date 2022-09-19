@@ -46,7 +46,7 @@ app.post("/createWallet", async (req, res) => {
 
 app.post("/sendMoney", async (req, res) => {
   const data = req.body;
-
+  console.log(data);
   const result = await makeRequest('POST', '/v1/account/transfer', data);
   return res.json(result.body)
 

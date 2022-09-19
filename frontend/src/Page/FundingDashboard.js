@@ -86,14 +86,18 @@ function FundingDashboard() {
         //     setLoading(true);
         // }
         const [isOpen, setIsOpen] = useState(false);
+        var userWalletId = null;
         for(let i=0;i<users.length;i++)
         {
             for (let j=0;  j<activities.length ;j++)
             {
                 if(activities[j].poster===users[i].userId)
                 {
-                    result.push([activities[j].activity_name,activities[j].category,activities[j].required_amount,activities[j].currency,(users[i].firstName+" "+users[i].lastName),users[i].email,activities[j].pushKey,("Required Amount"),("Donate"),users[i].country]);
-                }                
+                    result.push([activities[j].activity_name,activities[j].category,activities[j].required_amount,activities[j].currency,(users[i].firstName+" "+users[i].lastName),users[i].email,activities[j].pushKey,("Required Amount"),("Donate"),users[i].wallet_id]);
+                }
+            }
+            if(users[i].userId === firebaseAuth.currentUser.uid ){
+                userWalletId = users[i].wallet_id;
             }
         }
         return (            
@@ -104,9 +108,8 @@ function FundingDashboard() {
 
                     return(
                         <div key={idx} style={{margin:'1%'}}>
-                            {console.log(activities)}
-                            {console.log(users)}
-                            <CardLayout item={item} />
+                            {console.log(userWalletId)}
+                            <CardLayout item={item} uid={firebaseAuth.currentUser.uid} wallet_id={userWalletId} />
                         </div>
                         )
                     })

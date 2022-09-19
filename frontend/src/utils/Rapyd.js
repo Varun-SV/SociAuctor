@@ -57,8 +57,8 @@ async function sendMoney(amount, currency, sourceWallet, destinationWallet){
     },
     body: JSON.stringify(
       {
-        source_wallet: sourceWallet,
-        destination_wallet: destinationWallet,
+        source_ewallet: sourceWallet,
+        destination_ewallet: destinationWallet,
         amount: amount,
         currency: currency
       }
@@ -68,4 +68,4 @@ const resultJSON = await result.json()
 return resultJSON;
 }
 
-export {createPayment, createWallet};
+export { createPayment, createWallet, sendMoney };
