@@ -76,12 +76,6 @@ function FundingDashboard() {
       setActivities(activitiesArray);
       setUsers(usersArray);
     }
-    
-    useEffect(()=>{
-      /* createPayment(500, 'US', 'USD', 'USD').then((res)=>{
-        window.location.href = res.redirect_url;
-      }) */
-    }, []);
 
     let result=[];
     
@@ -94,7 +88,6 @@ function FundingDashboard() {
         const [isOpen, setIsOpen] = useState(false);
         for(let i=0;i<users.length;i++)
         {
-            console.log("inside adding function")
             for (let j=0;  j<activities.length ;j++)
             {
                 if(activities[j].poster===users[i].userId)
