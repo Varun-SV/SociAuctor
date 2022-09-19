@@ -13,7 +13,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import MenuItem from '@mui/material/MenuItem';
 import currencyJson from '../assets/Common-Currency.json';
-import createPayment from "../utils/Rapyd";
+import { createPayment } from "../utils/Rapyd";
 
 const CardLayout = (list) => {
 

@@ -16,10 +16,14 @@ import {addDoc, collection, getDocs,doc, updateDoc } from "@firebase/firestore";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { createWallet } from '../utils/Rapyd';
+import { Autocomplete } from '@mui/material';
+import countryList from 'react-select-country-list';
+import { useMemo } from 'react';
 
 export default function SignupPage() {
   const [messageOpen, setmessageOpen] = React.useState(false);
   const [message, setMessage] = React.useState("");
+  const countryOptions = useMemo(() => countryList().getData(), [])
     const theme = createTheme({
         palette: {
             primary: {
@@ -64,6 +68,8 @@ export default function SignupPage() {
     const password = data.get('password');
     const firstName = data.get('firstName');
     const lastName = data.get('lastName');
+    var country = data.get('country');
+    country = countryList().getValue(country);
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
@@ -76,6 +82,7 @@ export default function SignupPage() {
             lastName: lastName, 
             email: email,
             userId: uid,
+            country: country,
             wallet_id: wallet.data.id
           }).then(()=>{
               history.push('/');
@@ -141,6 +148,15 @@ export default function SignupPage() {
                   name="email"
                   autoComplete="email"
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      options={countryOptions}
+                      sx={{ width: '100%', marginTop: '1%' }}
+                      renderInput={(params) => <TextField {...params} label="Select Country" name='country' />}
+                  />
               </Grid>
               <Grid item xs={12}>
                 <TextField
