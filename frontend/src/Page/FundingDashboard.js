@@ -108,13 +108,13 @@ function FundingDashboard() {
             <div style={{margin:'3%'}}>
                 {/* {CardLayout(result[0])} */}
                 {
-                    result.slice(0,1).map((item,idx) => {
+                    result.map((item,idx) => {
 
                     return(
                         <div key={idx} style={{margin:'1%'}}>
                             {console.log(activities)}
                             {console.log(users)}
-                            {CardLayout(item)}
+                            <CardLayout item={item} />
                         </div>
                         )
                     })

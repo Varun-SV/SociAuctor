@@ -8,10 +8,12 @@ import Popup from 'reactjs-popup';
 import { Carousel } from 'react-responsive-carousel';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 const CardLayout = (list) => {
 
-    // const [isOpen,setIsOpen] = useState(false);
+    const [isOpen,setIsOpen] = useState(false);
+    list= list.item;
 
     function Card_pop(){
         return(
@@ -35,7 +37,7 @@ const CardLayout = (list) => {
         >
             <Card className="cards"
                     id="cards"
-                    // onClick={()=>{setIsOpen(!isOpen)}}
+                    onClick={()=>{setIsOpen(!isOpen)}}
                     style={{
                         width: "45%",
                         borderRadius: 10,
@@ -62,7 +64,7 @@ const CardLayout = (list) => {
                         </div>
                         <div style={{
                             display: 'flex',
-                            flexDirection: 'row',
+                            flexDirection: 'column',
                             justifyContent: 'space-between',
                         }}
                         >
@@ -73,22 +75,19 @@ const CardLayout = (list) => {
                                     fontFamily: 'Roboto',
                                 }}
                                 color="textSecondary"
-
                             >
-                                {"Category | Unique ID : (" + list[1]+" | "+list[6]+")"} 
-                                {<button  
-                                    style={{
-                                        backgroundColor: "transparent",
-                                        border: "none",
-                                        color: "blue",
-                                        textDecoration: "underline",
-                                        cursor: "pointer",
-                                        fontSize: 14,
-                                        fontWeight: 'bold',
-                                        fontFamily: 'Roboto',
-
-                                    }}
-                                    onClick={() =>  navigator.clipboard.writeText(list[6])}>copy</button>}
+                                    {list[1]}
+                            </Typography>
+                            <Typography
+                                style={{
+                                    fontSize: 14,
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Roboto',
+                                }}
+                                color="textSecondary"
+                            >
+                                {"ID : "+list[6]+")"} 
+                                <ContentCopyIcon style={{marginTop:'10px',color:"grey"}} onClick={() =>  navigator.clipboard.writeText(list[6])} />
                             </Typography>
                             <Typography
                                 style={{
@@ -146,8 +145,8 @@ const CardLayout = (list) => {
             </Card>
             <div>
             <Modal
-                open={false}
-                // onClose={handleCloseSale}
+                open={isOpen}
+                onClose={()=>{setIsOpen(false)}}
                 style={{ marginTop: '8%', marginBottom: '20%', height: '65%', width: '100%'}}
                 >
                     <Box sx={style}>

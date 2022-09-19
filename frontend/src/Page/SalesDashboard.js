@@ -54,8 +54,7 @@ function SalesDashboard() {
                         <div key={item} style={{margin:'1%'}}>
                             {console.log(deals)}
                             {console.log(users)}
-                            {CardLayout(item) // Here we are creating cards for each activity
-                            }
+                            <CardLayout item={item} />
                         </div>
                         )
                     })
