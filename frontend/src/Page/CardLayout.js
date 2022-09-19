@@ -26,6 +26,7 @@ const CardLayout = (list) => {
     const [messageOpen, setmessageOpen] = React.useState(false);    
     const currencyList = Object.keys(currencyJson);    
     const [saleCurrency, setSaleCurrency] = React.useState(currencyList[0]);
+    const [loading,setLoading] = React.useState(false);
     const userWalletId = list.wallet_id;
     const uid = list.uid;
     var firestore = null;
@@ -62,6 +63,7 @@ const CardLayout = (list) => {
 
     const handleDonate = (event) => {
         event.preventDefault();
+        setLoading(true);
         const data = new FormData(event.currentTarget);
         const selectSalesCurrency = data.get('selectSalesCurrency');
         const donationAmount = data.get("donationAmound");
@@ -74,6 +76,7 @@ const CardLayout = (list) => {
             if(res.status.status === 'SUCCESS'){
                 existingActDoc['required_amount'] -= res.data.amount;
                 setDoc(doc(activityRef, list[6]), existingActDoc).then(()=>{
+                    setLoading(false);
                     history.push('/');
                 })
             }
@@ -216,10 +219,10 @@ const CardLayout = (list) => {
                 onClose={()=>{setDonate(false)}}
                 style={{ marginTop: '8%', marginBottom: '20%', height: '65%', width: '100%'}}
                 >
+                {list[8]==="Donate"?
                     <Box sx={style}>
                     <h1 className="cardTitle">{list[8]}</h1>
                     <br/>
-                    {list[8]==="Donate"?
                     <form onSubmit={handleDonate}>
                     <div style={{display:"flex",flexDirection:"row", justifyContent:"space-evenly"}}>
                         <FormControl style={{width:'40%'}}>
@@ -248,17 +251,64 @@ const CardLayout = (list) => {
                     <br/>
                     <br/>
                     <Button type="submit" style={{width: '100%', background: '#142e36', color: 'white', fontSize: '100%'}}>Donate</Button>
-                    </form>
-                    :
-                    <div></div>
-                    }
+                    </form>                    
                     </Box>
+                    :
+                    <Box sx={style}>
+                    <h3 className="cardTitle">{list[0]}</h3>
+                    <Typography
+                        style={{
+                            fontSize: 14,
+                            fontWeight: 'bold',
+                            fontFamily: 'Roboto',
+                        }}
+                        color="textSecondary"
+                    >
+                        {"ID : "+list[6]}
+                    </Typography>
+                    <br/>
+                    <form onSubmit={handleDonate}>
+                    <div style={{display:"flex",flexDirection:"row", justifyContent:"space-evenly"}}>
+                        <FormControl style={{width:'40%'}}>
+                            <InputLabel id="deal-currency-select-label">Select Currency</InputLabel>
+                            <Select
+                                labelId='deal-currency-select-label'
+                                label='Select Currency'
+                                onChange={handleSalesCurrencyChange}
+                                value={saleCurrency}
+                                name='selectSalesCurrency'
+                            >
+                                {currencyList.map((category)=>{
+                                    return (<MenuItem value={category} key={category}>
+                                        <Typography>{category}</Typography>
+                                    </MenuItem>)
+                                })
+                                }
+                            </Select>
+                        </FormControl>
+                        <TextField 
+                            placeholder='Bid Amount' 
+                            name='bidAmound'
+                            type={'number'}
+                            style={{width:'auto'}}/>
+                    </div>
+                    <br/>
+                    <br/>
+                    <Button type="submit" style={{width: '100%', background: '#142e36', color: 'white', fontSize: '100%'}}>Donate</Button>
+                    </form>                    
+                    </Box>
+                    }
         </Modal>
         <Snackbar open={messageOpen} autoHideDuration={6000} onClose={handleClose}>
                     <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
                       Copied to clipboard
                     </Alert>
         </Snackbar>
+        {loading ? (
+                <Modal open={loading} className="loader-container">
+                <div className="spinner"></div>
+                </Modal>
+            ) : <div></div>}
     </div>
     );
 }
