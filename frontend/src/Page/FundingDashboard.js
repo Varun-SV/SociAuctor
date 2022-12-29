@@ -15,7 +15,6 @@ import {CardActions} from '@mui/material';
 import CardLayout from './CardLayout';
 import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
 import Modal from '@mui/material/Modal';
-import createPayment from "../utils/Rapyd";
 
 function FundingDashboard() {
 

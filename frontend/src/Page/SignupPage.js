@@ -79,18 +79,15 @@ export default function SignupPage() {
         const uid = user.uid;
         setMessage("Signup successful");
         setmessageOpen(true);
-        createWallet(firstName, lastName, email, 'person', uid).then((wallet)=>{
-          addDoc(ref, {
-            firstName: firstName,
-            lastName: lastName, 
-            email: email,
-            userId: uid,
-            country: country,
-            wallet_id: wallet.data.id
-          }).then(()=>{
-              setLoading(false);
-              history.push('/');
-          })
+        addDoc(ref, {
+          firstName: firstName,
+          lastName: lastName, 
+          email: email,
+          userId: uid,
+          country: country
+        }).then(()=>{
+            setLoading(false);
+            history.push('/');
         })
       })
       .catch((error) => {
